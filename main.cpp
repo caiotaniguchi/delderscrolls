@@ -2,7 +2,6 @@
 #include <GL/gl.h>		   // Open Graphics Library (OpenGL) header
 #include <GL/glu.h>		   // Open Graphics Library (OpenGL) header
 #include <GL/glut.h>	   // The GL Utility Toolkit (GLUT) Header
-#include "camera.h" 
 #include <iostream>
 #include "constants.h"
 #include "objClasses.h"
