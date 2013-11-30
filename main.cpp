@@ -10,21 +10,25 @@
 //inicializa variaveis globais
 glutWindow win;
 mousePos mouse;
-Camera camera;
+
 float Rotation;
+float dtLastFrame;
+float dtActualFrame;
 
 //inicia inimigos
 Ennemy enemmy1(-12,-12,100,100,0.05);
 Ennemy enemmy2(-20,29,100,100,0.05);
 Ennemy enemmy3(34,-29,100,100,0.05);
 
+Player player(0,0,100,100,0.05);
+
 // funcao de callback para movimento do mouse sobre a janela
 void mouseMotion(int x, int y)
 {
 	float snapThreshold = 300;
 
-	camera.yaw(x -mouse.x);
-	camera.pitch(y-mouse.y);
+	player.yaw(x -mouse.x);
+	player.pitch(y-mouse.y);
 	
 	mouse.x = x;
 	mouse.y = y;
@@ -44,25 +48,32 @@ void mouseMotion(int x, int y)
 // funcao de callback de desenho principal
 void display() 
 {
+	dtActualFrame = glutGet(GLUT_ELAPSED_TIME);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 	
 	// Modifica a posicao da camera e para onde ela aponta	
-	camera.position();
+	player.position();
 
 	/* desenhador generico pra teste*/
 	// Desenha inimigos
+	enemmy1.physics(dtActualFrame - dtLastFrame);
+	player.physics(dtActualFrame - dtLastFrame);
+	enemmy1.run(player.x,player.z);
 
-	enemmy1.run(camera.x,camera.z);
-	enemmy2.run(camera.x,camera.z);
-	enemmy3.run(camera.x,camera.z);
+	//enemmy2.run(camera.x,camera.z);
+	//enemmy3.run(camera.x,camera.z);
 	
 
 	std::cout << enemmy1.x;
 	std::cout << " | ";
 	std::cout << enemmy1.z ;
 	std::cout << " | " ;
+	std::cout << enemmy1.y;
+	std::cout << " | " ;
 	std::cout << enemmy1.directionAngle;
+	std::cout << " | " ;
+	std::cout << enemmy1.directiony;
 	std::cout << "\n";
 	// end desenha inimigos
 	
@@ -83,6 +94,7 @@ void display()
 	/*fim do desenhador */
 
 	glutSwapBuffers();
+	dtLastFrame = glutGet(GLUT_ELAPSED_TIME);
 }
 
 // Funcao que configura o openGL
@@ -149,17 +161,22 @@ void keyboard ( unsigned char key, int mousePositionX, int mousePositionY )
     case KEY_ESCAPE:        
       exit ( 0 );   
      case 'w':
-        camera.walkbuffer[FRONT] = true;
+        player.walkbuffer[FRONT] = true;
         break;
      case 's':
-     	camera.walkbuffer[BACK] = true;
+     	player.walkbuffer[BACK] = true;
      	break;
      case 'a':
-     	camera.walkbuffer[LEFT] = true;
+     	player.walkbuffer[LEFT] = true;
      	break;
      case 'd':
-     	camera.walkbuffer[RIGHT] = true;
+     	player.walkbuffer[RIGHT] = true;
      	break;
+     case 'q':
+     	enemmy1.jump();
+     	break;
+     case 32:
+     	player.jump();
 
   }
   glutPostRedisplay();
@@ -171,16 +188,16 @@ void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
   switch ( key ) 
   {  
      case 'w':
-     	camera.walkbuffer[FRONT] = false;
+     	player.walkbuffer[FRONT] = false;
      	break;
      case 's':
-     	camera.walkbuffer[BACK] = false;
+     	player.walkbuffer[BACK] = false;
      	break;
      case 'a':
-     	camera.walkbuffer[LEFT] = false;
+     	player.walkbuffer[LEFT] = false;
      	break;
      case 'd':
-     	camera.walkbuffer[RIGHT] = false;
+     	player.walkbuffer[RIGHT] = false;
      	break;
   }
   glutPostRedisplay();
@@ -189,7 +206,7 @@ void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
 // Callback timer
 void simulate(int lol){
 
-	camera.updatePosition();
+	player.updatePosition();
 	glutPostRedisplay();
 	glutTimerFunc(5,simulate,1);
 }

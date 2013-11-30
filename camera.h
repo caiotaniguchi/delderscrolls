@@ -1,6 +1,7 @@
-#ifndef CMAERA_H
+#ifndef CAMERA_H
 #define CAMERA_H "camera.h"
 #endif
+
 
 /* Description */
 // Classe para posicionamento da camera principal. 

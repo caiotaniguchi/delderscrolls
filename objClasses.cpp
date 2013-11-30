@@ -20,7 +20,7 @@ void Object::draw()
 {
 	glPushMatrix();
 		glColor3f(1.0,1.0,1.0);
-			glTranslatef(x,4,z);
+			glTranslatef(x,y,z);
 		    glRotatef(directionAngle,0,1,0);
 		    glutSolidTeapot(1);
 	glPopMatrix();
@@ -61,14 +61,21 @@ void DinamicObj::move(float dirx, float dirz)
 	z += speed*directionz/modulo;
 }
 
-void DinamicObj::physics()
+void DinamicObj::jump()
 {
-	//gravidade
-	if(y > 4)
-	{
-		y -= 1; 
-	}
-	else y = 4;
+	if(y < 4.5)
+	directiony = 200;
+}
+
+void DinamicObj::physics(float dt)
+{
+	dt = dt/1000;
+	float gravity = -5000;	
+	y += directiony*dt + gravity*dt*dt/2;
+	directiony += gravity*dt;
+
+	if(y<4) y=4;
+	if(y<4) directiony =0;
 }
 
 /*********************************enddinami*******************/
@@ -87,7 +94,8 @@ void Ennemy::run(float playerx, float playerz)
 
 	// controla qual tipo de movimento vai fazer
 	if(modulo >20)
-		wander(); 				// movimenteo aleatorio
+	//	wander(); 				// movimenteo aleatorio
+	1==1;
 	else
 	{	
 		wanderflag = false;
@@ -112,5 +120,65 @@ void Ennemy::wander()
 	else
 	{
 		move(wanderX, wanderZ);
+	}
+}
+
+
+/***********************END ENNEMY****************************/
+
+//Player
+Player::Player(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
+{
+	y = 4;
+}
+
+// Movimentacao Horizontal da camera
+void Player::yaw(int pixels)
+{
+	theta += pixels/180.0;
+}
+// Movimentacao Vertical da camera
+void Player::pitch(int pixels)
+{
+	phi -= pixels/180.0;
+	if (phi < -M_PI) { phi = -M_PI/2; }
+	if (phi > M_PI) { phi =  M_PI/2; }
+}
+
+// Funcao que posiciona e aponta a camera
+void Player::position()
+{
+	gluLookAt(x, y, z, x + cos(theta), y + sin(phi), z + sin(theta),0,1,0);
+}
+
+// Altera a posicao espacial da camera
+void Player::updatePosition()
+{
+	if (walkbuffer[FRONT] == true)
+	{
+		x += cos(theta)/9.0;
+		z += sin(theta)/9.0;
+		std::cout << "FRONT | ";
+	}
+	
+	if (walkbuffer[BACK] == true)
+	{
+		x -= cos(theta)/9.0;
+		z -= sin(theta)/9.0;
+		std::cout << "BACK | ";
+	}
+
+	if (walkbuffer[LEFT] == true)
+	{
+		x += sin(theta)/9.0;
+		z -= cos(theta)/9.0;
+		std::cout << "LEFT | ";
+	}
+
+	if (walkbuffer[RIGHT] == true)
+	{
+		x -= sin(theta)/9.0;
+		z += cos(theta)/9.0;
+		std::cout << "RIGHT | ";
 	}
 }

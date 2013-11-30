@@ -2,6 +2,8 @@
 #define OBJCLASSES_H "objClasses.h"
 #endif
 
+#include <iostream>
+//#include "camera.h"
 //#include "vector.h"
 
 // Classe de Objetos em Geral
@@ -36,12 +38,13 @@ class DinamicObj : public Object
 		float speed;
 		float directionx;		//posicao x pra onde ele deve ir
 		float directionz;		//
+		float directiony;		// direcao do pulo
 
 		DinamicObj(float Posx, float Posz, int hp, int ap, float sp);
 		void changeDirection(float x, float z);			 // muda a direção pra qual o objeto esta se deslocando
 		void move(float x, float z);   					  	   			 // Move o Objeto para a direcao e velocidade do objeto
 		void attack();					       			 // ataque 
-		void physics();									 // gravidade, etc
+		void physics(float dt);									 // gravidade, etc
 		void jump();
 
 	private:
@@ -49,9 +52,17 @@ class DinamicObj : public Object
 };
 
 // Classe para jogador
-class player : public DinamicObj
+class Player : public DinamicObj
 {
 public:
+	Player(float Posx, float Posz, int hp, int ap, float sp);
+	bool walkbuffer[10];
+	float theta;
+	float phi; 
+	void yaw      (int pixels);
+	void pitch    (int pixels);
+	void position ();
+	void updatePosition();
 
 };
 
