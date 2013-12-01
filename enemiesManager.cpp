@@ -4,6 +4,8 @@
 #include "terrain.h"
 #include <stdio.h>
 #include <string.h>
+#include "constants.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -26,20 +28,25 @@ void updateEnemies(float dt, vector<Enemy>& enemyList,float playerx, float playe
 	}
 	//std::cout << "\n";
 
+	if(enemyList.size() < TEAPOTS_AMOUNT)
+	{
+		enemyList.push_back(Enemy(rand() % 100 -50,rand() % 100 -50,50,100,0.07));
+	}
+
 }
 
 
 // Loop across a vector of enemies and verify if they were attacked. if positive, throwback enemy and remove healthpoints
 // From target
-void checkhit(vector<Enemy>& enemyList,float playerx, float playerz, float playerattackpoints,float theta)
+void checkhit(vector<Enemy>& enemyList, Player &player)
 {
 
 	for(int i =0; i < enemyList.size(); i++)
 	{	
 
 		// Set a vector pointing to the position where it must go
-		float directionx = enemyList[i].x - playerx;
-		float directionz = enemyList[i].z - playerz;
+		float directionx = enemyList[i].x - player.x;
+		float directionz = enemyList[i].z - player.z;
 
 		// compute the distance to the final position
 		float module = sqrt(directionx*directionx + directionz*directionz);
@@ -48,11 +55,11 @@ void checkhit(vector<Enemy>& enemyList,float playerx, float playerz, float playe
 		{
 			// Evaluate the inner product between the vector Enemy-Player and Player Eyes Direction
 			// If the ARCOS of this product is bigger than a specific angle the attack wont happen
-			float playerDirectionx = cos(theta);
-			float playerDirectionz = sin(theta);
+			float playerDirectionx = cos(player.theta);
+			float playerDirectionz = sin(player.theta);
 			
-			float auxVectorx = enemyList[i].x - playerx;
-			float auxVectorz = enemyList[i].z - playerz;
+			float auxVectorx = enemyList[i].x - player.x;
+			float auxVectorz = enemyList[i].z - player.z;
 
 			float modulePlayerDirection = sqrt(playerDirectionz*playerDirectionz+ playerDirectionx*playerDirectionx);
 			float moduleAuxVector = sqrt(auxVectorx*auxVectorx+ auxVectorz*auxVectorz);
@@ -65,14 +72,17 @@ void checkhit(vector<Enemy>& enemyList,float playerx, float playerz, float playe
 			// Check Angle
 			if( angle < 20 )
 			{
-				enemyList[i].throwback(playerx,playerz);
-				enemyList[i].healthpoints -= playerattackpoints;
+				enemyList[i].throwback(player.x,player.z);
+				enemyList[i].healthpoints -= player.attackpoints;
 
 			}
 
 			// erase the enemy from the enemylist if healpoints inferior than zero
-			if(enemyList[i].healthpoints <= 0)	enemyList.erase(enemyList.begin()+i);
-	
+			if(enemyList[i].healthpoints <= 0)	
+				{
+					enemyList.erase(enemyList.begin()+i);
+					player.experience += 100;
+				}
 		}		
 	}
 }

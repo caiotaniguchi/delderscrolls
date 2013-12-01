@@ -75,7 +75,8 @@ public:
 	bool walkbuffer[10];											// Movement Buffer
 	float theta;													// Used for horizontal rotation
 	float phi; 														// Used for vertical rotation
-	
+	int   experience;
+
 	// Methods
 	void yaw      (int pixels);		// Function that changes the looking direction rotates horizontally									
 	void pitch    (int pixels);		// Function that changes the looking direction rotates vertically

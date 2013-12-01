@@ -60,14 +60,16 @@ bool DinamicObj::detectColision()
 
 	for(int i =0 ; i < objectsList.size(); i++)
 	{
-		radiusx = objectsList[i].x - x;
-		radiusz = objectsList[i].z - z;
+		radiusx = x - objectsList[i].x;
+		radiusz = z - objectsList[i].z;
 
 		float module = sqrt(radiusx*radiusx + radiusz*radiusz);
 
-		if (module < objectsList[i].colisionRadius)
+		if (module <= objectsList[i].colisionRadius)
 		{
-			 return true;
+			x += radiusx/module;
+			z += radiusz/module;
+			return true;
 			// std::cout << "yey\n";//return true;
 		}
 	}
@@ -146,8 +148,11 @@ void DinamicObj::physics(float dt)
 		// Only add vector if throwback is different than zero 
 		if(throwbackx != 0 || throwbackz != 0)
 		{
-			x -= throwbackx/(AIRFRICTION*thowbackmodule);
-			z -= throwbackz/(AIRFRICTION*thowbackmodule);
+			if(!detectColision())
+			{
+				x -= throwbackx/(AIRFRICTION*thowbackmodule);
+				z -= throwbackz/(AIRFRICTION*thowbackmodule);
+			}
 		}
 	}
 	else // Null throwback if object thouch the ground

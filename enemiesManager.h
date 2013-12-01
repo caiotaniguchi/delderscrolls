@@ -11,6 +11,6 @@ void updateEnemies(float dt, vector<Enemy> &enemyList,float playerx, float playe
 
 // Loop across a vector of ennemies and verify if they were atacked. if positive, throwback enemy and remove healthpoints
 // From target
-void checkhit(vector<Enemy>& enemyList,float playerx, float playerz, float playerattackpoints, float theta);
+void checkhit(vector<Enemy>& enemyList, Player &player);
 
 #endif

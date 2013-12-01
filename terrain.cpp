@@ -9,15 +9,23 @@
 using namespace std;
 void loadTerrain(vector<Object>& objectsList)
 {
+	extern float xpos[TREEAMOUNT];
+	extern float zpos[TREEAMOUNT];
 
-	glPushMatrix();
-	glColor3f(1.0,1.0,0.2);
-	glTranslatef(20,0,20);
-	glRotatef(-90,1,0,0);
-	glutSolidCone(2, 10, 20, 20);
-	glPopMatrix();
-	objectsList.push_back(Object(20.0f,20.0f,3));
+	// randomgen trees
+	for(int i=0; i <TREEAMOUNT+1; i++)
+	{
+		glPushMatrix();
+		glColor3f(0.0,1,0.0);
+		glTranslatef(xpos[i],0,zpos[i]);
+		glRotatef(-90,1,0,0);
+		glutSolidCone(2, 10, 20, 20);
+		glPopMatrix();
+		objectsList.push_back(Object(xpos[i],zpos[i],3));
+	}		
 
+
+	/*
 	glPushMatrix();
 	glColor3f(1.0,1.0,0.2);
 	glTranslatef(-10,0,20);
@@ -25,7 +33,7 @@ void loadTerrain(vector<Object>& objectsList)
 	glutSolidCone(2, 10, 20, 20);
 	glPopMatrix();
 	objectsList.push_back(Object(-10,20,3));
-
+	*/
 }
 
 void writeText(char * string, float x, float y)
@@ -41,7 +49,7 @@ void writeText(char * string, float x, float y)
 	glDisable(GL_LIGHT0);
 	
 	glRasterPos2f( x,y ) ;				// center of screen. (-1,0) is center left.
-	glColor4f(0.0f, 0.0f, 0.0f, 0.9f);
+	glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
 	const char * p = string ;
 	do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *p ); 
 	while( *(++p) );

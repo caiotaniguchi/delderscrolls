@@ -11,13 +11,18 @@
 #define A_KEY	97
 #define D_KEY	100
 
-#define WIN_WIDTH 400
-#define WIN_HEIGHT 300
+#define WIN_WIDTH 800
+#define WIN_HEIGHT 600
 
 // Game Constants
 #define GRAVITY -10000
 #define AIRFRICTION 2
 #define GROUNDLIMIT 0.9
+#define TREEAMOUNT 50
+#define MAX_RENDER_DISTANCE 250.0f
+#define MIN_RENDER_DISTANCE 1.0f
+#define TEAPOTS_AMOUNT 10
+#define GROUND_AREA 250
 
 // Structs 
 // Struct da janela

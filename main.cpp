@@ -9,6 +9,7 @@
 #include "enemiesManager.h"// Enemies Manager Functions
 #include "terrain.h"
 
+
 // Global Inizialization 
 glutWindow win;
 mousePos mouse;
@@ -16,6 +17,10 @@ mousePos mouse;
 float Rotation;
 float dtEndTime;
 float dtActualTime;
+
+// random tree positions
+float xpos[TREEAMOUNT];
+float zpos[TREEAMOUNT];
 
 // Create Player object
 Player player(0,0,100,10,1);
@@ -50,7 +55,7 @@ void mouseMotion(int x, int y)
 // Callback function for the main display
 void display() 
 {	
-	char lifeBar[300];
+	char string[300];
 	// Keep the actual time that this frame is been rendeered
 	dtActualTime = glutGet(GLUT_ELAPSED_TIME);
 
@@ -74,12 +79,12 @@ void display()
 
 	// Draw ground
 	glPushMatrix();
-	glColor3f(0.0,1.0,0.2);
+	glColor3f(0.0,0.4,0.0);
 	glBegin(GL_QUADS);
-		glVertex4f(-500,0,-500,1);
-		glVertex4f(-500,0,500,1);
-		glVertex4f(500,0,500,1);
-		glVertex4f(500,0,-500,1);
+		glVertex4f(-GROUND_AREA,0,-GROUND_AREA,1);
+		glVertex4f(-GROUND_AREA,0,GROUND_AREA,1);
+		glVertex4f(GROUND_AREA,0,GROUND_AREA,1);
+		glVertex4f(GROUND_AREA,0,-GROUND_AREA,1);
 	glEnd();
 	glPopMatrix();
 	// Drawer end 
@@ -89,9 +94,12 @@ void display()
 
 	// Write text
 	writeText("", -0.9,-0.8);
-	writeText("Jogador", -0.9,-0.8);
-	sprintf(lifeBar,"VIDA: %d", player.healthpoints);
-	writeText(lifeBar, -0.9,-0.9);
+	writeText("Player", -0.9,-0.8);
+	sprintf(string,"Health: %d", player.healthpoints);
+	writeText(string, -0.9,-0.9);
+	sprintf(string,"Experience: %d", player.experience);
+	writeText(string, -0.65,-0.8);
+
 
 	// Final flush
 	glutSwapBuffers();
@@ -125,7 +133,6 @@ void initialize ()
     glPolygonOffset(1.0,1.0);
     glHint (GL_FOG_HINT, GL_NICEST);
     glLineWidth(1);
-
 }
 
 // Callback funtion for down key keyboard events
@@ -199,7 +206,7 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
     case 0:
     	//enemy1.throwback(player.x,player.z);
     	//enemy1.attack();
-    	checkhit(enemyList, player.x, player.z, player.attackpoints, player.theta);
+    	checkhit(enemyList, player);
     	
     	break;
   	case 2:
@@ -241,8 +248,8 @@ int main(int argc, char **argv)
 	win.width = WIN_WIDTH;
 	win.height = WIN_HEIGHT;
 	win.field_of_view_angle = 45;
-	win.z_near = 1.0f;
-	win.z_far = 1000.0f;
+	win.z_near = MIN_RENDER_DISTANCE;
+	win.z_far = MAX_RENDER_DISTANCE;
 
 	// Set mouse star position
 	mouse.x = 0;
@@ -250,6 +257,7 @@ int main(int argc, char **argv)
 	mouse.w = WIN_WIDTH;
 	mouse.h = WIN_HEIGHT;
 
+	/*
 	// Add the Ennemies to the vector
 	enemyList.push_back(Enemy(+15,0,100,100,0.07));
 	enemyList.push_back(Enemy(-25,0,100,100,0.07));
@@ -257,6 +265,14 @@ int main(int argc, char **argv)
 	enemyList.push_back(Enemy(+15,15,100,100,0.07));
 	enemyList.push_back(Enemy(-25,25,100,100,0.07));
 	enemyList.push_back(Enemy(+25,-25,100,100,0.07));
+	*/
+
+	// Generate random tree positions
+	for(int i=0; i <TREEAMOUNT+1; i++)
+	{
+		xpos[i] = rand() % 100 -50;
+		zpos[i] = rand() % 100 -50;
+	}
 
 	// Start OpenGL Machine
 	glutInit(&argc, argv);                                      // GLUT initialization
@@ -264,7 +280,8 @@ int main(int argc, char **argv)
 	glutInitWindowSize(win.width,win.height);					// set window size
 	glutCreateWindow("delderscrolls");	
 	initialize();												// create Window
-	glutPassiveMotionFunc(mouseMotion);							// Use the pointer position to controle the camera
+	glutPassiveMotionFunc(mouseMotion);
+	glutWarpPointer(mouse.w/2, mouse.h/2);						// Use the pointer position to controle the camera
 	glutMouseFunc(mouseClick);									// Mouse click event callback
 	glutReshapeFunc(reshape);									// windows distorcion evnet callback
 	glutDisplayFunc(display);									// register Display Function
