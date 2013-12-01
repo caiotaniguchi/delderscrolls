@@ -137,24 +137,24 @@ void DinamicObj::throwback(float playerx, float playerz)
 }
 
 /***************************************************************/
-/* 			Ennemy Object Class Methods Definition			   */
+/* 			Enemy Object Class Methods Definition			   */
 /***************************************************************/
 
-// Classe ennemy Constructor
-Ennemy::Ennemy(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
+// Enemy Constructor
+Enemy::Enemy(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
 {
 	wanderflag = false;
 	y=4;
 }
 
-// Ennemy main function. Controls decitions based on players position
-void Ennemy::run(float playerx, float playerz)
+// Enemy main function. Controls decitions based on players position
+void Enemy::run(float playerx, float playerz)
 {
 	float directionx = playerx - x;
 	float directionz = playerz - z;
 	float module = sqrt(directionx*directionx + directionz*directionz);
 
-	// Set the ennemy on wander mode if too far away from player
+	// Set the Enemy on wander mode if too far away from player
 	if(module >20)
 		wander();
 	//1==1;
@@ -164,11 +164,11 @@ void Ennemy::run(float playerx, float playerz)
 		move(playerx,playerz);	// Follow Player
 	}
 
-	draw();						// Draw Ennemy
+	draw();						// Draw Enemy
 }
 
 // Wandering method. Set a random position to move if not yet setted.
-void Ennemy::wander()
+void Enemy::wander()
 {
 
 	float module = sqrt((wanderX-x)*(wanderX-x) + (wanderZ-z)*(wanderZ-z));
@@ -248,7 +248,7 @@ void Player::updatePosition()
 	}
 }
 
-// Check all ennemies and attack the ones in codition to be attacked 
+// Check all enemies and attack the ones in codition to be attacked 
 void Player::attack()
 {
 

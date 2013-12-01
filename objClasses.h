@@ -35,7 +35,7 @@ class StaticObj : public Object
 /***************************************************************/
 /* 					Dinamic Object Class         			   */
 /***************************************************************/
-// Dinamic Object Class. For Player, Ennimies, projectiles etc.
+// Dinamic Object Class. For Player, Enemies, projectiles etc.
 class DinamicObj : public Object
 {
 	public:
@@ -54,14 +54,14 @@ class DinamicObj : public Object
 		void changeDirection(float x, float z);			 // Change the direction where the object is looking at
 		void move(float x, float z);   					 // Move the Object to a specific place using its speed, x, z position as parameters
 														 	// It also rotate to the direction using the speed as a parameter
-		void attack();					       			 // Attack Method (not implemented yet)
+		void attack();					       			 // NAO IMPLEMENTADO
 		void physics(float dt);							 // Physics Component (Just gravity for now)
 														 	// Changes the upSpeedMomentum and the Object::Y component using dt (time) value
 		void jump();									 // Set the upSpeedMomentum if the Object is on the ground
-		void throwback(float playerx, float playerz);    // Function that throw the ennemy backward and upward
+		void throwback(float playerx, float playerz);    // Function that throw the enemy backward and upward
 
 	private:
-		void detectColision();							 // Colission Detection Function
+		void detectColision();							 // NAO IMPLEMENTADO
 };
 
 /***************************************************************/
@@ -80,27 +80,27 @@ public:
 	void pitch    (int pixels);		// Function that changes the looking direction rotates vertically
 	void LookAt();					// Function that position the player and the direction where is looking at
 	void updatePosition();			// Update the position of the character in the space.
-	void attack();
+	void attack();					// NAO IMPLEMENTADO E VAI DAR MERDA COM O ATTACK DO DYNAMICOBJ
 };
 
 
 /***************************************************************/
-/* 			          Ennemy Object Class       			   */
+/* 			          Enemy Object Class       			   */
 /***************************************************************/
-class Ennemy : public DinamicObj
+class Enemy : public DinamicObj
 {
 private:
-	bool wanderflag;  // Flag used to determine if the ennemy is wandering of following the player
+	bool wanderflag;  // Flag used to determine if the enemy is wandering of following the player
 	float wanderX;	  // X component of a random wandering final position 	
 	float wanderZ;	  // Z component of a random wandering final position
 public:
-	// Constructor of the ennemy. Set position, HP, Attack, Speed
-	Ennemy(float Posx, float Posz, int hp, int ap, float sp);
+	// Constructor of the enemy. Set position, HP, Attack, Speed
+	Enemy(float Posx, float Posz, int hp, int ap, float sp);
 
 	// Methods
 	void wander();								// Wandering function (change the wanderX, wanderZ if not set)
-	void attackPlayer();						// AttackPlayer Function (not implemented yet)
-	void run(float playerx, float playerz);		// Run the ennemy object. Make the function calls depending the case.
+	void attackPlayer();						// NAO IMPLEMENTADO E POR QUE ISSO EXISTE??????
+	void run(float playerx, float playerz);		// Run the enemy object. Make the function calls depending the case.
 													// It make wander() call if too far from player and follow player 
 													// If close enough.
 
