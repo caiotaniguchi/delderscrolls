@@ -5,27 +5,32 @@
 #include <iostream>		   // 
 #include "constants.h"	   // Constant File
 #include "objClasses.h"	   // Classes File
+#include <vector>
+#include "enemiesManager.h"// Enemies Manager Functions
 
 // Global Inizialization 
 glutWindow win;
 mousePos mouse;
-
+//using namespace std;
 float Rotation;
 float dtEndTime;
 float dtActualTime;
 
-// Create ennemies objects
-Ennemy enemmy1(-12,-12,100,100,0.05);
-Ennemy enemmy2(-20,29,100,100,0.05);
-Ennemy enemmy3(34,-29,100,100,0.05);
-
 // Create Player object
-Player player(0,0,100,100,0.05);
+Player player(0,0,100,10,0.05);
+
+// Create vector of enemmy for listing
+std::vector<Ennemy> enemmyList;
+
+// Create ennemies objects
+// Ennemy enemmy1(+30,0,100,100,0.05);
+// Ennemy enemmy2(-20,29,100,100,0.05);
+// Ennemy enemmy3(34,-29,100,100,0.05);
 
 // Callback function for passive mouse movements over the window
 void mouseMotion(int x, int y)
 {
-	float snapThreshold = 20;
+	float snapThreshold = 10;
 
 	player.yaw(x -mouse.x);
 	player.pitch(y-mouse.y);
@@ -61,23 +66,17 @@ void display()
 	
 	// Test Drawings
 	// Draw Ennemies
-	enemmy1.physics(dtActualTime - dtEndTime);
 	player.physics(dtActualTime - dtEndTime);
-	enemmy1.run(player.x,player.z);
+	updateEnemies(dtActualTime - dtEndTime, enemmyList, player.x, player.z);
+	//enemmyList[0].run(player.x,player.z);
 
-	//enemmy2.run(camera.x,camera.z);
-	//enemmy3.run(camera.x,camera.z);
-	
 	// Debugg Strings
-	std::cout << enemmy1.x;
-	std::cout << " | ";
-	std::cout << enemmy1.z ;
+	std::cout << "TEAPOTS HEALTH: ";
+	std::cout << enemmyList[0].healthpoints;
 	std::cout << " | " ;
-	std::cout << enemmy1.y;
+	std::cout << enemmyList[1].healthpoints;
 	std::cout << " | " ;
-	std::cout << enemmy1.throwbackx;
-	std::cout << " | " ;
-	std::cout << enemmy1.throwbackz;
+	std::cout << enemmyList[2].healthpoints;
 	std::cout << "\n";
 	// Draw ennemies end
 	
@@ -182,11 +181,14 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
 	switch( key ) 
   	{  
     case 0:
-    	enemmy1.throwback(player.x,player.z);
+    	//enemmy1.throwback(player.x,player.z);
     	//enemmy1.attack();
+    	checkhit(enemmyList, player.x, player.z, player.attackpoints, player.theta);
+    	
     	break;
   	case 2:
-    	enemmy1.jump();
+  		//enemmyList[0].jump();
+    	//makejump(0, enemmyList);
     	break;
   	}
   	// Request Redisplay
@@ -198,8 +200,9 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
 void simulate(int lol){
 
 	player.updatePosition();
+	//updateEnemies(5, enemmyList, player.x, player.y);
 	glutPostRedisplay();
-	glutTimerFunc(5,simulate,1);
+	glutTimerFunc(1,simulate,1);
 }
 
 // Callback for reshaping the window's viewport 
@@ -230,6 +233,11 @@ int main(int argc, char **argv)
 	mouse.y = 0;
 	mouse.w = WIN_WIDTH;
 	mouse.h = WIN_HEIGHT;
+
+	// Add the Ennemies to the vector
+	enemmyList.push_back(Ennemy(+15,0,100,100,0.05));
+	enemmyList.push_back(Ennemy(-25,0,100,100,0.05));
+	enemmyList.push_back(Ennemy(+25,-25,100,100,0.05));
 
 	// Start OpenGL Machine
 	glutInit(&argc, argv);                                      // GLUT initialization

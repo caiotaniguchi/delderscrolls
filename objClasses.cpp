@@ -65,9 +65,9 @@ void DinamicObj::move(float dirx, float dirz)
 
 	// Compute Rotation Speed
 	if(directionAngle - angle < 0)
-		directionAngle += 30*speed;
+		directionAngle += 60*speed;
 	if(directionAngle - angle > 0)
-		directionAngle -= 30*speed;
+		directionAngle -= 60*speed;
 
 	// If the Object is close enough he stop moving
 	if (module < 2 ){ return;}
@@ -129,7 +129,7 @@ void DinamicObj::throwback(float playerx, float playerz)
 
 	if(module <6)
 	{
-		upSpeedMomentum = 250;
+		upSpeedMomentum = 50;
 
 		throwbackx = 1*(playerx - x)/module;
 		throwbackz = 1*(playerz - z)/module;
@@ -144,6 +144,7 @@ void DinamicObj::throwback(float playerx, float playerz)
 Ennemy::Ennemy(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
 {
 	wanderflag = false;
+	y=4;
 }
 
 // Ennemy main function. Controls decitions based on players position
@@ -155,8 +156,8 @@ void Ennemy::run(float playerx, float playerz)
 
 	// Set the ennemy on wander mode if too far away from player
 	if(module >20)
-	//	wander();
-	1==1;
+		wander();
+	//1==1;
 	else
 	{	
 		wanderflag = false;		// Turn off wandering
@@ -222,28 +223,28 @@ void Player::updatePosition()
 	{
 		x += cos(theta)/9.0;
 		z += sin(theta)/9.0;
-		std::cout << "FRONT | ";
+		//std::cout << "FRONT | ";
 	}
 	
 	if (walkbuffer[BACK] == true)
 	{
 		x -= cos(theta)/9.0;
 		z -= sin(theta)/9.0;
-		std::cout << "BACK | ";
+		//std::cout << "BACK | ";
 	}
 
 	if (walkbuffer[LEFT] == true)
 	{
 		x += sin(theta)/9.0;
 		z -= cos(theta)/9.0;
-		std::cout << "LEFT | ";
+		//std::cout << "LEFT | ";
 	}
 
 	if (walkbuffer[RIGHT] == true)
 	{
 		x -= sin(theta)/9.0;
 		z += cos(theta)/9.0;
-		std::cout << "RIGHT | ";
+		//std::cout << "RIGHT | ";
 	}
 }
 
