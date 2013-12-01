@@ -3,11 +3,12 @@
 #endif
 
 #include <cmath> 
+#include <stdlib.h>		   // Std Library
 #include <GL/gl.h>		   // Open Graphics Library (OpenGL) header
 #include <GL/glut.h>	   // The GL Utility Toolkit (GLUT) Header
 #include "constants.h"	   // Constant File
 #include "objClasses.h"	   // Object classes File	
-#include <stdlib.h>		   // Std Library
+
 
 
 /***************************************************************/
@@ -69,30 +70,70 @@ void DinamicObj::move(float dirx, float dirz)
 		directionAngle -= 30*speed;
 
 	// If the Object is close enough he stop moving
-	if (module < 2){ return;}
+	if (module < 2 ){ return;}
 
 	// If the Object is not close enough, make a step
-	x += speed*directionx/module;
-	z += speed*directionz/module;
+	if(sqrt(throwbackx*throwbackx + throwbackz*throwbackz) == 0)
+	{
+		x += speed*directionx/module;
+		z += speed*directionz/module;
+	}
 }
 
 // Jumping function. Set a Upward momentum if object is on the ground
 void DinamicObj::jump()
 {
 	if(y < 4.5)					// Ground Stat at 4.0
-	upSpeedMomentum = 200;
+		upSpeedMomentum = 200;
 }
 
 // Simulates Gravity
 void DinamicObj::physics(float dt)
 {
-	dt = dt/1000;								// Convert milliseconds to seconds
-	float gravity = -6000;	
-	y += upSpeedMomentum*dt + gravity*dt*dt/2;
-	upSpeedMomentum += gravity*dt;
+	float thowbackmodule = sqrt(throwbackx*throwbackx + throwbackz*throwbackz); // Calculate throwback module
+	dt = dt/1000;																// Convert milliseconds to seconds
+	
+	// Controls Gravity
+	y += upSpeedMomentum*dt + GRAVITY*dt*dt/2;
+	upSpeedMomentum += GRAVITY*dt;
 
-	if(y<4) y=4;
-	if(y<4) upSpeedMomentum =0;
+	// Groud Limit
+	if(y<4) 
+	{
+		y=4;
+		upSpeedMomentum = 0;
+	}
+
+	// Controls Throwback
+	if(y > 4)
+	{	
+		// Only addv ector if throwback is different than zero 
+		if(throwbackx != 0 || throwbackz != 0)
+		{
+			x -= throwbackx/(AIRFRICTION*thowbackmodule);
+			z -= throwbackz/(AIRFRICTION*thowbackmodule);
+		}
+	}
+	else // Null throwback if object thouch the ground
+	{
+		throwbackx = 0;
+		throwbackz = 0;
+	}
+}
+
+void DinamicObj::throwback(float playerx, float playerz)
+{
+	float directionx = playerx - x;
+	float directionz = playerz - z;
+	float module = sqrt(directionx*directionx + directionz*directionz);
+
+	if(module <6)
+	{
+		upSpeedMomentum = 250;
+
+		throwbackx = 1*(playerx - x)/module;
+		throwbackz = 1*(playerz - z)/module;
+	}
 }
 
 /***************************************************************/
@@ -204,4 +245,10 @@ void Player::updatePosition()
 		z += cos(theta)/9.0;
 		std::cout << "RIGHT | ";
 	}
+}
+
+// Check all ennemies and attack the ones in codition to be attacked 
+void Player::attack()
+{
+
 }

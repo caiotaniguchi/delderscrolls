@@ -25,7 +25,7 @@ Player player(0,0,100,100,0.05);
 // Callback function for passive mouse movements over the window
 void mouseMotion(int x, int y)
 {
-	float snapThreshold = 300;
+	float snapThreshold = 20;
 
 	player.yaw(x -mouse.x);
 	player.pitch(y-mouse.y);
@@ -41,7 +41,7 @@ void mouseMotion(int x, int y)
 		// Warp mouse to the center of the window
 		glutWarpPointer(mouse.w/2, mouse.h/2);
 	}
-	
+	// Request redisplay
 	glutPostRedisplay();
 }
 
@@ -75,9 +75,9 @@ void display()
 	std::cout << " | " ;
 	std::cout << enemmy1.y;
 	std::cout << " | " ;
-	std::cout << enemmy1.directionAngle;
+	std::cout << enemmy1.throwbackx;
 	std::cout << " | " ;
-	std::cout << enemmy1.upSpeedMomentum;
+	std::cout << enemmy1.throwbackz;
 	std::cout << "\n";
 	// Draw ennemies end
 	
@@ -146,9 +146,6 @@ void keyboard ( unsigned char key, int mousePositionX, int mousePositionY )
      case 'd':
      	player.walkbuffer[RIGHT] = true;
      	break;
-     case 'q':
-     	enemmy1.jump();
-     	break;
      case 32:
      	player.jump();
 
@@ -177,6 +174,23 @@ void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
   }
   // Request Redisplay
   glutPostRedisplay();
+}
+
+// Callback treating mouseclick event
+void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
+{
+	switch( key ) 
+  	{  
+    case 0:
+    	enemmy1.throwback(player.x,player.z);
+    	//enemmy1.attack();
+    	break;
+  	case 2:
+    	enemmy1.jump();
+    	break;
+  	}
+  	// Request Redisplay
+  	glutPostRedisplay();
 }
 
 // Timer Callback function
@@ -223,12 +237,13 @@ int main(int argc, char **argv)
 	glutInitWindowSize(win.width,win.height);					// set window size
 	glutCreateWindow("delderscrolls");	
 	initialize();												// create Window
-	glutPassiveMotionFunc(mouseMotion);	
-	glutReshapeFunc(reshape);
+	glutPassiveMotionFunc(mouseMotion);							// Use the pointer position to controle the camera
+	glutMouseFunc(mouseClick);									// Mouse click event callback
+	glutReshapeFunc(reshape);									// windows distorcion evnet callback
 	glutDisplayFunc(display);									// register Display Function
 	glutTimerFunc(10,simulate,1);								// Register Timer Function
-    glutKeyboardFunc( keyboard );								// register Keyboard Handler
-	glutKeyboardUpFunc(keyboardup);
+    glutKeyboardFunc( keyboard );								// register Keyboard DOWN Handler
+	glutKeyboardUpFunc(keyboardup);								// register keyboard UP Handler
 	glutMainLoop();												// run GLUT mainloop
 	return 0;
 }

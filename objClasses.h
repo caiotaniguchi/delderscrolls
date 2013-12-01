@@ -44,6 +44,9 @@ class DinamicObj : public Object
 		float speed;				// Object Movement Speed
 		float upSpeedMomentum;		// Upward speed (for jumping)
 
+		float throwbackx;
+		float throwbackz;
+
 		// Dinamic Object Constructor: Position x, Position Z, Healtpoints, AtackPower, Speed
 		DinamicObj(float Posx, float Posz, int hp, int ap, float sp);
 
@@ -55,6 +58,7 @@ class DinamicObj : public Object
 		void physics(float dt);							 // Physics Component (Just gravity for now)
 														 	// Changes the upSpeedMomentum and the Object::Y component using dt (time) value
 		void jump();									 // Set the upSpeedMomentum if the Object is on the ground
+		void throwback(float playerx, float playerz);    // Function that throw the ennemy backward and upward
 
 	private:
 		void detectColision();							 // Colission Detection Function
@@ -76,6 +80,7 @@ public:
 	void pitch    (int pixels);		// Function that changes the looking direction rotates vertically
 	void LookAt();					// Function that position the player and the direction where is looking at
 	void updatePosition();			// Update the position of the character in the space.
+	void attack();
 };
 
 
@@ -98,4 +103,5 @@ public:
 	void run(float playerx, float playerz);		// Run the ennemy object. Make the function calls depending the case.
 													// It make wander() call if too far from player and follow player 
 													// If close enough.
+
 };
