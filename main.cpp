@@ -95,7 +95,6 @@ void display()
 
 	// Final flush
 	glutSwapBuffers();
-	glFlush();
 	}
 
 // Initialization Function that set some parameters 

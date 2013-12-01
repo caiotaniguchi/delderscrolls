@@ -16,7 +16,7 @@
 
 // Game Constants
 #define GRAVITY -16000
-#define AIRFRICTION 2.5
+#define AIRFRICTION 4
 
 // Structs 
 // Struct da janela

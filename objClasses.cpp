@@ -153,7 +153,7 @@ void DinamicObj::throwback(float playerx, float playerz)
 
 	if(module <6)
 	{
-		upSpeedMomentum = 50;
+		upSpeedMomentum = 100;
 
 		throwbackx = 1*(playerx - x)/module;
 		throwbackz = 1*(playerz - z)/module;
