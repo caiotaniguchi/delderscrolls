@@ -58,9 +58,9 @@ void DinamicObj::move(float dirx, float dirz)
 	
 	// Evaluates Angle for Rotation	
 	if(directionz > 0)
-		angle = int(-360*acos(directionx/modulo)/(2*M_PI))%360;
+		angle = int(-360*acos(directionx/module)/(2*M_PI))%360;
 	else
-		angle = int(360*acos(directionx/modulo)/(2*M_PI))%360;
+		angle = int(360*acos(directionx/module)/(2*M_PI))%360;
 
 	// Compute Rotation Speed
 	if(directionAngle - angle < 0)
@@ -69,11 +69,11 @@ void DinamicObj::move(float dirx, float dirz)
 		directionAngle -= 30*speed;
 
 	// If the Object is close enough he stop moving
-	if (modulo < 2){ return;}
+	if (module < 2){ return;}
 
 	// If the Object is not close enough, make a step
-	x += speed*directionx/modulo;
-	z += speed*directionz/modulo;
+	x += speed*directionx/module;
+	z += speed*directionz/module;
 }
 
 // Jumping function. Set a Upward momentum if object is on the ground
@@ -110,10 +110,10 @@ void Ennemy::run(float playerx, float playerz)
 {
 	float directionx = playerx - x;
 	float directionz = playerz - z;
-	float modulo = sqrt(directionx*directionx + directionz*directionz);
+	float module = sqrt(directionx*directionx + directionz*directionz);
 
 	// Set the ennemy on wander mode if too far away from player
-	if(modulo >20)
+	if(module >20)
 	//	wander();
 	1==1;
 	else
@@ -129,8 +129,8 @@ void Ennemy::run(float playerx, float playerz)
 void Ennemy::wander()
 {
 
-	float modulo = sqrt((wanderX-x)*(wanderX-x) + (wanderZ-z)*(wanderZ-z));
-	if(modulo <3) wanderflag = false;
+	float module = sqrt((wanderX-x)*(wanderX-x) + (wanderZ-z)*(wanderZ-z));
+	if(module <3) wanderflag = false;
 
 	if(wanderflag == false)
 	{
