@@ -15,7 +15,7 @@
 #define WIN_HEIGHT 600
 
 // Game Constants
-#define GRAVITY -8000
+#define GRAVITY -16000
 #define AIRFRICTION 2.5
 
 // Structs 

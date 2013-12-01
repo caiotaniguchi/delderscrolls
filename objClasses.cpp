@@ -1,15 +1,12 @@
-#ifndef OBJCLASSES_H  
-#define OBJCLASSES_H "objClasses.h"
-#endif
-
 #include <cmath> 
 #include <stdlib.h>		   // Std Library
 #include <GL/gl.h>		   // Open Graphics Library (OpenGL) header
 #include <GL/glut.h>	   // The GL Utility Toolkit (GLUT) Header
 #include "constants.h"	   // Constant File
 #include "objClasses.h"	   // Object classes File	
+#include <vector> 
 
-
+//extern std::vector<Object> objectsList;
 
 /***************************************************************/
 /* 			General Object Class Methods Definition			   */
@@ -19,6 +16,13 @@ Object::Object(float Posx, float Posz)
 {
 	x = Posx;
 	z = Posz;
+}
+
+Object::Object(float Posx, float Posz, float radius)
+{
+	x = Posx;
+	z = Posz;
+	colisionRadius = radius;
 }
 
 void Object::draw()
@@ -34,7 +38,7 @@ void Object::draw()
 
 
 /***************************************************************/
-/* 			Dinamic Object Class Methods Definition			   */
+/* 			Dynamic Object Class Methods Definition			   */
 /***************************************************************/
 
 // Constructor
@@ -45,7 +49,25 @@ DinamicObj::DinamicObj(float Posx, float Posz, int hp, int ap, float sp) : Objec
 	speed 		 = sp;
 }
 
-// Movement Methoda
+// Collision Detection:
+bool DinamicObj::detectColision()
+{
+	extern std::vector<Object> objectsList;
+	
+	float radiusx;
+	float radiusz;
+	for(int i; i < objectsList.size(); i++)
+	{
+		radiusx = objectsList[i].x - x;
+		radiusz = objectsList[i].z - z;
+		float module = sqrt(radiusx*radiusx + radiusz*radiusz);
+		if (module < objectsList[i].colisionRadius) std::cout << module;//return true;
+	}
+	std::cout << "nnnon\n";
+	return false;
+}
+
+// Movement Method
 void DinamicObj::move(float dirx, float dirz)
 {	
 	float angle;
@@ -68,6 +90,8 @@ void DinamicObj::move(float dirx, float dirz)
 		directionAngle += 60*speed;
 	if(directionAngle - angle > 0)
 		directionAngle -= 60*speed;
+
+	//std::cout << detectColision();
 
 	// If the Object is close enough he stop moving
 	if (module < 3 ){ return;}
@@ -137,24 +161,24 @@ void DinamicObj::throwback(float playerx, float playerz)
 }
 
 /***************************************************************/
-/* 			Ennemy Object Class Methods Definition			   */
+/* 			Enemy Object Class Methods Definition			   */
 /***************************************************************/
 
-// Classe ennemy Constructor
-Ennemy::Ennemy(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
+// Classe Enemy Constructor
+Enemy::Enemy(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
 {
 	wanderflag = false;
 	y=4;
 }
 
-// Ennemy main function. Controls decitions based on players position
-void Ennemy::run(float playerx, float playerz)
+// Enemy main function. Controls decitions based on players position
+void Enemy::run(float playerx, float playerz)
 {
 	float directionx = playerx - x;
 	float directionz = playerz - z;
 	float module = sqrt(directionx*directionx + directionz*directionz);
 
-	// Set the ennemy on wander mode if too far away from player
+	// Set the Enemy on wander mode if too far away from player
 	if(module >20)
 		wander();
 	//1==1;
@@ -164,11 +188,11 @@ void Ennemy::run(float playerx, float playerz)
 		move(playerx,playerz);	// Follow Player
 	}
 
-	draw();						// Draw Ennemy
+	draw();						// Draw Enemy
 }
 
 // Wandering method. Set a random position to move if not yet setted.
-void Ennemy::wander()
+void Enemy::wander()
 {
 
 	float module = sqrt((wanderX-x)*(wanderX-x) + (wanderZ-z)*(wanderZ-z));

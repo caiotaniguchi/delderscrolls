@@ -20,8 +20,9 @@ float dtActualTime;
 // Create Player object
 Player player(0,0,100,10,1);
 
-// Create vector of enemmy for listing
-std::vector<Ennemy> enemmyList;
+// Create vector of enemy for listing
+std::vector<Enemy> enemyList;
+std::vector<Object> objectsList;
 
 // Callback function for passive mouse movements over the window
 void mouseMotion(int x, int y)
@@ -49,6 +50,7 @@ void mouseMotion(int x, int y)
 // Callback function for the main display
 void display() 
 {	
+	char lifeBar[300];
 	// Keep the actual time that this frame is been rendeered
 	dtActualTime = glutGet(GLUT_ELAPSED_TIME);
 
@@ -61,13 +63,14 @@ void display()
 	player.LookAt();
 	
 	// Test Drawings
-	// Draw Ennemies
+	// Draw Enne
+
 	player.physics(dtActualTime - dtEndTime);
-	updateEnemies(dtActualTime - dtEndTime, enemmyList, player.x, player.z);
+	updateEnemies(dtActualTime - dtEndTime, enemyList, player.x, player.z);
 	// Draw ennemies end
 	
 	// Load and place objects in the terrain
-	loadTerrain();
+	loadTerrain(objectsList);
 
 	// Draw ground
 	glPushMatrix();
@@ -79,14 +82,21 @@ void display()
 		glVertex4f(500,0,-500,1);
 	glEnd();
 	glPopMatrix();
-	
-	glPopMatrix();
 	// Drawer end 
-
-	glutSwapBuffers();
+	glPopMatrix();
 	// Keep the time when the end of the frame was finished
 	dtEndTime = glutGet(GLUT_ELAPSED_TIME);
-}
+
+	// Write text
+	writeText("", -0.9,-0.8);
+	writeText("Jogador", -0.9,-0.8);
+	sprintf(lifeBar,"VIDA: %d", player.healthpoints);
+	writeText(lifeBar, -0.9,-0.9);
+
+	// Final flush
+	glutSwapBuffers();
+	glFlush();
+	}
 
 // Initialization Function that set some parameters 
 void initialize () 
@@ -187,14 +197,14 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
 	switch( key ) 
   	{  
     case 0:
-    	//enemmy1.throwback(player.x,player.z);
-    	//enemmy1.attack();
-    	checkhit(enemmyList, player.x, player.z, player.attackpoints, player.theta);
+    	//enemy1.throwback(player.x,player.z);
+    	//enemy1.attack();
+    	checkhit(enemyList, player.x, player.z, player.attackpoints, player.theta);
     	
     	break;
   	case 2:
-  		//enemmyList[0].jump();
-    	//makejump(0, enemmyList);
+  		//enemyList[0].jump();
+    	//makejump(0, enemyList);
     	break;
   	}
   	// Request Redisplay
@@ -206,7 +216,7 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
 void simulate(int lol){
 
 	player.updatePosition();
-	//updateEnemies(5, enemmyList, player.x, player.y);
+	//updateEnemies(5, enemyList, player.x, player.y);
 	glutPostRedisplay();
 	glutTimerFunc(1,simulate,1);
 }
@@ -241,12 +251,12 @@ int main(int argc, char **argv)
 	mouse.h = WIN_HEIGHT;
 
 	// Add the Ennemies to the vector
-	enemmyList.push_back(Ennemy(+15,0,100,100,0.07));
-	enemmyList.push_back(Ennemy(-25,0,100,100,0.07));
-	enemmyList.push_back(Ennemy(+25,-25,100,100,0.07));
-	enemmyList.push_back(Ennemy(+15,15,100,100,0.07));
-	enemmyList.push_back(Ennemy(-25,25,100,100,0.07));
-	enemmyList.push_back(Ennemy(+25,-25,100,100,0.07));
+	enemyList.push_back(Enemy(+15,0,100,100,0.07));
+	enemyList.push_back(Enemy(-25,0,100,100,0.07));
+	enemyList.push_back(Enemy(+25,-25,100,100,0.07));
+	enemyList.push_back(Enemy(+15,15,100,100,0.07));
+	enemyList.push_back(Enemy(-25,25,100,100,0.07));
+	enemyList.push_back(Enemy(+25,-25,100,100,0.07));
 
 	// Start OpenGL Machine
 	glutInit(&argc, argv);                                      // GLUT initialization

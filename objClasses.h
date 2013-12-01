@@ -1,6 +1,6 @@
 #ifndef OBJCLASSES_H  
 #define OBJCLASSES_H "objClasses.h"
-#endif
+
 
 #include <iostream>
 
@@ -15,10 +15,11 @@ class Object
 		float y;						// Object Y Position
 		float z;						// Object Z Position
 		float directionAngle;			// Object Rotation Angle
-		int colisionRadius;				// Radius value for colission evaluation
-		int colisionHeight;				// Height value for colission evaluation
+		float colisionRadius;				// Radius value for colission evaluation
+		float colisionHeight;				// Height value for colission evaluation
 
 		Object(float Posx,float Posz);	// Constructor function: set Object X,Z with PosX and PosZ
+		Object(float Posx, float Posz, float radius);
 		void draw(); 					// Drawing function on the x,y,z position and with directionAngle rotation
 		void loadModel();				// LoadModel function (not implemented yet)
 };
@@ -58,10 +59,10 @@ class DinamicObj : public Object
 		void physics(float dt);							 // Physics Component (Just gravity for now)
 														 	// Changes the upSpeedMomentum and the Object::Y component using dt (time) value
 		void jump();									 // Set the upSpeedMomentum if the Object is on the ground
-		void throwback(float playerx, float playerz);    // Function that throw the ennemy backward and upward
-
+		void throwback(float playerx, float playerz);    // Function that throw the Enemy backward and upward
+		bool detectColision();							 // Colission Detection Function
 	private:
-		void detectColision();							 // Colission Detection Function
+
 };
 
 /***************************************************************/
@@ -85,23 +86,24 @@ public:
 
 
 /***************************************************************/
-/* 			          Ennemy Object Class       			   */
+/* 			          Enemy Object Class       			   */
 /***************************************************************/
-class Ennemy : public DinamicObj
+class Enemy : public DinamicObj
 {
 private:
-	bool wanderflag;  // Flag used to determine if the ennemy is wandering of following the player
+	bool wanderflag;  // Flag used to determine if the Enemy is wandering of following the player
 	float wanderX;	  // X component of a random wandering final position 	
 	float wanderZ;	  // Z component of a random wandering final position
 public:
-	// Constructor of the ennemy. Set position, HP, Attack, Speed
-	Ennemy(float Posx, float Posz, int hp, int ap, float sp);
+	// Constructor of the Enemy. Set position, HP, Attack, Speed
+	Enemy(float Posx, float Posz, int hp, int ap, float sp);
 
 	// Methods
 	void wander();								// Wandering function (change the wanderX, wanderZ if not set)
 	void attackPlayer();						// AttackPlayer Function (not implemented yet)
-	void run(float playerx, float playerz);		// Run the ennemy object. Make the function calls depending the case.
+	void run(float playerx, float playerz);		// Run the Enemy object. Make the function calls depending the case.
 													// It make wander() call if too far from player and follow player 
 													// If close enough.
 
 };
+#endif
