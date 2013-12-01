@@ -3,79 +3,99 @@
 #endif
 
 #include <iostream>
-//#include "camera.h"
-//#include "vector.h"
 
-// Classe de Objetos em Geral
+/***************************************************************/
+/* 			 			General Object Class       			   */
+/***************************************************************/
+// General Propurse Object
 class Object
 {
 	public:
-		float x;
-		float y;
-		float z;
-		float directionAngle;
-		int colisionRatio;	// Raio para calculo da colisao
-		int colisionHeight;	// altura para calcula da colisao
+		float x;						// Object X Position 
+		float y;						// Object Y Position
+		float z;						// Object Z Position
+		float directionAngle;			// Object Rotation Angle
+		int colisionRadius;				// Radius value for colission evaluation
+		int colisionHeight;				// Height value for colission evaluation
 
-		Object(float Posx,float Posz);
-		void draw(); 		// Funcao Para Desenhar o Modelo
-		void loadModel();	// Funcao que carrega o modelo
+		Object(float Posx,float Posz);	// Constructor function: set Object X,Z with PosX and PosZ
+		void draw(); 					// Drawing function on the x,y,z position and with directionAngle rotation
+		void loadModel();				// LoadModel function (not implemented yet)
 };
 
-// Classe de Objetos Estaticos: Pedras, arvores, etc
+/***************************************************************/
+/* 			          Static Object Class       			   */
+/***************************************************************/
+// Static ObjectClass. For trees, rocks etc
 class StaticObj : public Object
 {
 	public:
-
 };
 
-// Classe de Objetos Dinamicos: Jogador, Inimigos
+/***************************************************************/
+/* 					Dinamic Object Class         			   */
+/***************************************************************/
+// Dinamic Object Class. For Player, Ennimies, projectiles etc.
 class DinamicObj : public Object
 {
 	public:
-		int healthpoints;
-		int attackpoints;
-		float speed;
-		float directionx;		//posicao x pra onde ele deve ir
-		float directionz;		//
-		float directiony;		// direcao do pulo
+		int healthpoints;			// Object Healthpoints
+		int attackpoints;			// Object Attack Power
+		float speed;				// Object Movement Speed
+		float upSpeedMomentum;		// Upward speed (for jumping)
 
+		// Dinamic Object Constructor: Position x, Position Z, Healtpoints, AtackPower, Speed
 		DinamicObj(float Posx, float Posz, int hp, int ap, float sp);
-		void changeDirection(float x, float z);			 // muda a direção pra qual o objeto esta se deslocando
-		void move(float x, float z);   					  	   			 // Move o Objeto para a direcao e velocidade do objeto
-		void attack();					       			 // ataque 
-		void physics(float dt);									 // gravidade, etc
-		void jump();
+
+		// Methods
+		void changeDirection(float x, float z);			 // Change the direction where the object is looking at
+		void move(float x, float z);   					 // Move the Object to a specific place using its speed, x, z position as parameters
+														 	// It also rotate to the direction using the speed as a parameter
+		void attack();					       			 // Attack Method (not implemented yet)
+		void physics(float dt);							 // Physics Component (Just gravity for now)
+														 	// Changes the upSpeedMomentum and the Object::Y component using dt (time) value
+		void jump();									 // Set the upSpeedMomentum if the Object is on the ground
 
 	private:
-		void detectColision();
+		void detectColision();							 // Colission Detection Function
 };
 
-// Classe para jogador
+/***************************************************************/
+/* 			          Player Object Class       			   */
+/***************************************************************/
 class Player : public DinamicObj
 {
 public:
-	Player(float Posx, float Posz, int hp, int ap, float sp);
-	bool walkbuffer[10];
-	float theta;
-	float phi; 
-	void yaw      (int pixels);
-	void pitch    (int pixels);
-	void position ();
-	void updatePosition();
-
+	Player(float Posx, float Posz, int hp, int ap, float sp);		// Constructor, start the object
+	bool walkbuffer[10];											// Movement Buffer
+	float theta;													// Used for horizontal rotation
+	float phi; 														// Used for vertical rotation
+	
+	// Methods
+	void yaw      (int pixels);		// Function that changes the looking direction rotates horizontally									
+	void pitch    (int pixels);		// Function that changes the looking direction rotates vertically
+	void LookAt();					// Function that position the player and the direction where is looking at
+	void updatePosition();			// Update the position of the character in the space.
 };
 
+
+/***************************************************************/
+/* 			          Ennemy Object Class       			   */
+/***************************************************************/
 class Ennemy : public DinamicObj
 {
 private:
-	bool wanderflag;
-	float wanderX;
-	float wanderZ;
+	bool wanderflag;  // Flag used to determine if the ennemy is wandering of following the player
+	float wanderX;	  // X component of a random wandering final position 	
+	float wanderZ;	  // Z component of a random wandering final position
 public:
+	// Constructor of the ennemy. Set position, HP, Attack, Speed
 	Ennemy(float Posx, float Posz, int hp, int ap, float sp);
 
-	void wander();
-	void attackPlayer();
-	void run(float playerx, float playerz);
+	// Methods
+	void wander();								// Wandering function (change the wanderX, wanderZ if not set)
+	void attackPlayer();						// AttackPlayer Function (not implemented yet)
+	void run(float playerx, float playerz);		// Run the ennemy object. Make the function calls depending the case.
+													// It make wander() call if too far from player and follow player 
+													// If close enough.
 };
