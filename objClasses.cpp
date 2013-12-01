@@ -70,7 +70,7 @@ void DinamicObj::move(float dirx, float dirz)
 		directionAngle -= 60*speed;
 
 	// If the Object is close enough he stop moving
-	if (module < 2 ){ return;}
+	if (module < 3 ){ return;}
 
 	// If the Object is not close enough, make a step
 	if(sqrt(throwbackx*throwbackx + throwbackz*throwbackz) == 0)
@@ -221,29 +221,29 @@ void Player::updatePosition()
 {
 	if (walkbuffer[FRONT] == true)
 	{
-		x += cos(theta)/9.0;
-		z += sin(theta)/9.0;
+		x += speed*cos(theta)/9.0;
+		z += speed*sin(theta)/9.0;
 		//std::cout << "FRONT | ";
 	}
 	
 	if (walkbuffer[BACK] == true)
 	{
-		x -= cos(theta)/9.0;
-		z -= sin(theta)/9.0;
+		x -= speed*cos(theta)/9.0;
+		z -= speed*sin(theta)/9.0;
 		//std::cout << "BACK | ";
 	}
 
 	if (walkbuffer[LEFT] == true)
 	{
-		x += sin(theta)/9.0;
-		z -= cos(theta)/9.0;
+		x += speed*sin(theta)/9.0;
+		z -= speed*cos(theta)/9.0;
 		//std::cout << "LEFT | ";
 	}
 
 	if (walkbuffer[RIGHT] == true)
 	{
-		x -= sin(theta)/9.0;
-		z += cos(theta)/9.0;
+		x -= speed*sin(theta)/9.0;
+		z += speed*cos(theta)/9.0;
 		//std::cout << "RIGHT | ";
 	}
 }

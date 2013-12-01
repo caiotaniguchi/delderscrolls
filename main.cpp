@@ -7,6 +7,7 @@
 #include "objClasses.h"	   // Classes File
 #include <vector>
 #include "enemiesManager.h"// Enemies Manager Functions
+#include "terrain.h"
 
 // Global Inizialization 
 glutWindow win;
@@ -17,15 +18,10 @@ float dtEndTime;
 float dtActualTime;
 
 // Create Player object
-Player player(0,0,100,10,0.05);
+Player player(0,0,100,10,1);
 
 // Create vector of enemmy for listing
 std::vector<Ennemy> enemmyList;
-
-// Create ennemies objects
-// Ennemy enemmy1(+30,0,100,100,0.05);
-// Ennemy enemmy2(-20,29,100,100,0.05);
-// Ennemy enemmy3(34,-29,100,100,0.05);
 
 // Callback function for passive mouse movements over the window
 void mouseMotion(int x, int y)
@@ -68,18 +64,11 @@ void display()
 	// Draw Ennemies
 	player.physics(dtActualTime - dtEndTime);
 	updateEnemies(dtActualTime - dtEndTime, enemmyList, player.x, player.z);
-	//enemmyList[0].run(player.x,player.z);
-
-	// Debugg Strings
-	std::cout << "TEAPOTS HEALTH: ";
-	std::cout << enemmyList[0].healthpoints;
-	std::cout << " | " ;
-	std::cout << enemmyList[1].healthpoints;
-	std::cout << " | " ;
-	std::cout << enemmyList[2].healthpoints;
-	std::cout << "\n";
 	// Draw ennemies end
 	
+	// Load and place objects in the terrain
+	loadTerrain();
+
 	// Draw ground
 	glPushMatrix();
 	glColor3f(0.0,1.0,0.2);
@@ -108,9 +97,12 @@ void initialize ()
     GLfloat amb_light[] = { 0.1, 0.1, 0.1, 1.0 };
     GLfloat diffuse[] = { 0.6, 0.6, 0.6, 1 };
     GLfloat specular[] = { 0.7, 0.7, 0.3, 1 };
+    GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0 };
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, amb_light );
     glLightfv( GL_LIGHT0, GL_DIFFUSE, diffuse );
     glLightfv( GL_LIGHT0, GL_SPECULAR, specular );
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
     // Liga Luz
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -119,10 +111,10 @@ void initialize ()
     glEnable(GL_DEPTH_TEST);
     glEnable( GL_COLOR_MATERIAL );
 	glClearColor(0.0, 0.0, 0.6, 1.0);
-    //glEnable(GL_POLYGON_OFFSET_FILL);
-    ///glPolygonOffset(2.0,2.0);
-    //glHint (GL_FOG_HINT, GL_NICEST);
-    //glLineWidth(1);
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(1.0,1.0);
+    glHint (GL_FOG_HINT, GL_NICEST);
+    glLineWidth(1);
 
 }
 
@@ -147,7 +139,14 @@ void keyboard ( unsigned char key, int mousePositionX, int mousePositionY )
      	break;
      case 32:
      	player.jump();
+     	break;
+    }
 
+  switch( glutGetModifiers() )
+  {
+  	case GLUT_ACTIVE_SHIFT:
+  	player.speed = 3;
+   	break;
   }
   // Request Redisplay
   glutPostRedisplay();
@@ -170,6 +169,13 @@ void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
      case 'd':
      	player.walkbuffer[RIGHT] = false;
      	break;
+  }
+
+  switch( glutGetModifiers() )
+  {
+  	case !GLUT_ACTIVE_SHIFT:
+  	player.speed = 1;
+   	break;
   }
   // Request Redisplay
   glutPostRedisplay();
@@ -226,7 +232,7 @@ int main(int argc, char **argv)
 	win.height = WIN_HEIGHT;
 	win.field_of_view_angle = 45;
 	win.z_near = 1.0f;
-	win.z_far = 500.0f;
+	win.z_far = 1000.0f;
 
 	// Set mouse star position
 	mouse.x = 0;
@@ -235,9 +241,12 @@ int main(int argc, char **argv)
 	mouse.h = WIN_HEIGHT;
 
 	// Add the Ennemies to the vector
-	enemmyList.push_back(Ennemy(+15,0,100,100,0.05));
-	enemmyList.push_back(Ennemy(-25,0,100,100,0.05));
-	enemmyList.push_back(Ennemy(+25,-25,100,100,0.05));
+	enemmyList.push_back(Ennemy(+15,0,100,100,0.07));
+	enemmyList.push_back(Ennemy(-25,0,100,100,0.07));
+	enemmyList.push_back(Ennemy(+25,-25,100,100,0.07));
+	enemmyList.push_back(Ennemy(+15,15,100,100,0.07));
+	enemmyList.push_back(Ennemy(-25,25,100,100,0.07));
+	enemmyList.push_back(Ennemy(+25,-25,100,100,0.07));
 
 	// Start OpenGL Machine
 	glutInit(&argc, argv);                                      // GLUT initialization
