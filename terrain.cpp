@@ -9,21 +9,22 @@
 using namespace std;
 void loadTerrain(vector<Object>& objectsList)
 {
-	glPushMatrix();
-	glColor3f(1.0,1.0,0.2);
-	glRotatef(-90,1,0,0);
-	glTranslatef(20,20,0);
-	glutSolidCone(2, 10, 20, 20);
-	glPopMatrix();
-	objectsList.push_back(Object(20.0f,20.0f,10.0f));
 
 	glPushMatrix();
 	glColor3f(1.0,1.0,0.2);
+	glTranslatef(20,0,20);
 	glRotatef(-90,1,0,0);
-	glTranslatef(-10,20,0);
 	glutSolidCone(2, 10, 20, 20);
 	glPopMatrix();
-	objectsList.push_back(Object(-10,20,10));
+	objectsList.push_back(Object(20.0f,20.0f,3));
+
+	glPushMatrix();
+	glColor3f(1.0,1.0,0.2);
+	glTranslatef(-10,0,20);
+	glRotatef(-90,1,0,0);
+	glutSolidCone(2, 10, 20, 20);
+	glPopMatrix();
+	objectsList.push_back(Object(-10,20,3));
 
 }
 

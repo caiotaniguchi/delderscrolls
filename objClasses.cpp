@@ -5,6 +5,7 @@
 #include "constants.h"	   // Constant File
 #include "objClasses.h"	   // Object classes File	
 #include <vector> 
+#include <iostream>
 
 //extern std::vector<Object> objectsList;
 
@@ -56,14 +57,21 @@ bool DinamicObj::detectColision()
 	
 	float radiusx;
 	float radiusz;
-	for(int i; i < objectsList.size(); i++)
+
+	for(int i =0 ; i < objectsList.size(); i++)
 	{
 		radiusx = objectsList[i].x - x;
 		radiusz = objectsList[i].z - z;
+
 		float module = sqrt(radiusx*radiusx + radiusz*radiusz);
-		if (module < objectsList[i].colisionRadius) std::cout << module;//return true;
+
+		if (module < objectsList[i].colisionRadius)
+		{
+			 return true;
+			// std::cout << "yey\n";//return true;
+		}
 	}
-	std::cout << "nnnon\n";
+
 	return false;
 }
 
@@ -71,7 +79,8 @@ bool DinamicObj::detectColision()
 void DinamicObj::move(float dirx, float dirz)
 {	
 	float angle;
-
+	float lastx = x;
+	float lastz = z;
 	// Set a vector pointing to the position where it must go
 	float directionx = dirx - x;
 	float directionz = dirz - z;
@@ -91,23 +100,26 @@ void DinamicObj::move(float dirx, float dirz)
 	if(directionAngle - angle > 0)
 		directionAngle -= 60*speed;
 
-	//std::cout << detectColision();
-
 	// If the Object is close enough he stop moving
-	if (module < 3 ){ return;}
+	if (module < 3 ){return;}
 
 	// If the Object is not close enough, make a step
 	if(sqrt(throwbackx*throwbackx + throwbackz*throwbackz) == 0)
 	{
 		x += speed*directionx/module;
 		z += speed*directionz/module;
+		if(detectColision())
+		{
+			x = lastx;
+			z = lastz;
+		}
 	}
 }
 
 // Jumping function. Set a Upward momentum if object is on the ground
 void DinamicObj::jump()
 {
-	if(y < 4.5)					// Ground Stat at 4.0
+	if(y < GROUNDLIMIT +0.5)					// Ground Stat at 4.0
 		upSpeedMomentum = 200;
 }
 
@@ -122,16 +134,16 @@ void DinamicObj::physics(float dt)
 	upSpeedMomentum += GRAVITY*dt;
 
 	// Groud Limit
-	if(y<4) 
+	if(y<GROUNDLIMIT) 
 	{
-		y=4;
+		y=GROUNDLIMIT;
 		upSpeedMomentum = 0;
 	}
 
 	// Controls Throwback
-	if(y > 4)
+	if(y > GROUNDLIMIT)
 	{	
-		// Only addv ector if throwback is different than zero 
+		// Only add vector if throwback is different than zero 
 		if(throwbackx != 0 || throwbackz != 0)
 		{
 			x -= throwbackx/(AIRFRICTION*thowbackmodule);
@@ -153,7 +165,7 @@ void DinamicObj::throwback(float playerx, float playerz)
 
 	if(module <6)
 	{
-		upSpeedMomentum = 50;
+		upSpeedMomentum = 200;
 
 		throwbackx = 1*(playerx - x)/module;
 		throwbackz = 1*(playerz - z)/module;
@@ -168,7 +180,7 @@ void DinamicObj::throwback(float playerx, float playerz)
 Enemy::Enemy(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
 {
 	wanderflag = false;
-	y=4;
+	y=GROUNDLIMIT;
 }
 
 // Enemy main function. Controls decitions based on players position
@@ -243,13 +255,18 @@ void Player::LookAt()
 // Change the position of the camera on the space
 void Player::updatePosition()
 {
+	float lastx = x;
+	float lastz = z;
+
+	if(y<4) y=4;
+
 	if (walkbuffer[FRONT] == true)
 	{
 		x += speed*cos(theta)/9.0;
 		z += speed*sin(theta)/9.0;
 		//std::cout << "FRONT | ";
 	}
-	
+
 	if (walkbuffer[BACK] == true)
 	{
 		x -= speed*cos(theta)/9.0;
@@ -270,10 +287,9 @@ void Player::updatePosition()
 		z += speed*cos(theta)/9.0;
 		//std::cout << "RIGHT | ";
 	}
-}
-
-// Check all ennemies and attack the ones in codition to be attacked 
-void Player::attack()
-{
-
+	if(detectColision())
+	{	
+		x = lastx;
+		z = lastz;
+	}
 }
