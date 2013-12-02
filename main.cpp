@@ -22,7 +22,7 @@
 
 #include "objClasses.h"		   // Classes File
 #include "constants.h"		   // Constant File
-#include "enemiesManager.h"	   // Enemies Manager Functions
+#include "dinamicObjManager.h"	   // Enemies Manager Functions
 #include "terrain.h"
 #include "util.h"
 
