@@ -7,7 +7,7 @@
 using namespace std;
 
 // Loop across a vector of ennemies and update they posisitons and physics effects
-void updateEnemies(float dt, vector<Enemy> &enemyList,float playerx, float playerz);
+void updateEnemies(float dt, vector<Enemy> &enemyList, Player &player);
 
 // Loop across a vector of ennemies and verify if they were atacked. if positive, throwback enemy and remove healthpoints
 // From target

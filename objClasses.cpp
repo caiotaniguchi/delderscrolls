@@ -54,10 +54,27 @@ DinamicObj::DinamicObj(float Posx, float Posz, int hp, int ap, float sp) : Objec
 bool DinamicObj::detectColision()
 {
 	extern std::vector<Object> objectsList;
-	
+
 	float radiusx;
 	float radiusz;
+	float lastx = x;
+	float lastz = z;
 
+	// Check invisble wall
+	if(abs(x)>GROUND_AREA-2) 
+		{
+			x = lastx;
+			return true;
+		}
+		
+	if(abs(z)>GROUND_AREA-2)
+		{
+			z = lastz;
+			return true;
+		}
+		 
+
+	// evaluates for fixed objects
 	for(int i =0 ; i < objectsList.size(); i++)
 	{
 		radiusx = x - objectsList[i].x;
@@ -74,6 +91,36 @@ bool DinamicObj::detectColision()
 		}
 	}
 
+
+	return false;
+}
+
+bool DinamicObj::detectMovingColision()
+{
+	extern std::vector<Enemy> enemyList;
+
+	float radiusx;
+	float radiusz;
+
+	// evaluates for moving objects
+	for(int i =0 ; i < enemyList.size(); i++)
+	{
+		radiusx = x - enemyList[i].x;
+		radiusz = z - enemyList[i].z;
+
+		float module = sqrt(radiusx*radiusx + radiusz*radiusz);
+		// skip if enmylist is yourself
+		if(module == 0) continue;
+
+		if (module <= enemyList[i].colisionRadius && enemyList[i].y < GROUNDLIMIT)
+		{
+			x = enemyList[i].x + enemyList[i].colisionRadius*(radiusx/module);
+			z = enemyList[i].z + enemyList[i].colisionRadius*(radiusz/module);
+			return true;
+			//std::cout << "yey\n";//return true;
+		}
+	}
+	
 	return false;
 }
 
@@ -103,17 +150,19 @@ void DinamicObj::move(float dirx, float dirz)
 		directionAngle -= 60*speed;
 
 	// If the Object is close enough he stop moving
-	if (module < 3 ){return;}
+	if(module < 3){return;}
+
+
 
 	// If the Object is not close enough, make a step
 	if(sqrt(throwbackx*throwbackx + throwbackz*throwbackz) == 0)
 	{
 		x += speed*directionx/module;
 		z += speed*directionz/module;
-		if(detectColision())
+		if(detectColision() || detectMovingColision())
 		{
-			x = lastx;
-			z = lastz;
+			x -= speed*directionx/module;
+			z -= speed*directionz/module;
 		}
 	}
 }
@@ -182,27 +231,35 @@ void DinamicObj::throwback(float playerx, float playerz)
 /***************************************************************/
 
 // Classe Enemy Constructor
-Enemy::Enemy(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
+Enemy::Enemy(float Posx, float Posz, float radius,int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
 {
 	wanderflag = false;
 	y=GROUNDLIMIT;
+	colisionRadius = radius;
+
 }
 
 // Enemy main function. Controls decitions based on players position
-void Enemy::run(float playerx, float playerz)
+void Enemy::run(Player &player)
 {
-	float directionx = playerx - x;
-	float directionz = playerz - z;
+	float directionx = player.x - x;
+	float directionz = player.z - z;
 	float module = sqrt(directionx*directionx + directionz*directionz);
 
 	// Set the Enemy on wander mode if too far away from player
+	if(module < ATTACK_DISTANCE && (glutGet(GLUT_ELAPSED_TIME) - lastAttackTime) > COOLDOWNTIME_MS)
+		{
+			lastAttackTime = glutGet(GLUT_ELAPSED_TIME);
+			player.healthpoints -=1;
+		}
+
 	if(module >20)
 		wander();
 	//1==1;
 	else
 	{	
 		wanderflag = false;		// Turn off wandering
-		move(playerx,playerz);	// Follow Player
+		move(player.x,player.z);	// Follow Player
 	}
 
 	draw();						// Draw Enemy
@@ -263,6 +320,12 @@ void Player::updatePosition()
 	float lastx = x;
 	float lastz = z;
 
+	if(jumpBuffer == true)	jump();
+
+	if(shiftBuffer == true)
+		speed = 3;
+	else speed = 1;
+
 	if(y<4) y=4;
 
 	if (walkbuffer[FRONT] == true)
@@ -292,7 +355,7 @@ void Player::updatePosition()
 		z += speed*cos(theta)/9.0;
 		//std::cout << "RIGHT | ";
 	}
-	if(detectColision())
+	if(detectColision()  || detectMovingColision())
 	{	
 		x = lastx;
 		z = lastz;

@@ -19,10 +19,12 @@
 #define AIRFRICTION 2
 #define GROUNDLIMIT 0.9
 #define TREEAMOUNT 50
-#define MAX_RENDER_DISTANCE 250.0f
+#define MAX_RENDER_DISTANCE 200.0f
 #define MIN_RENDER_DISTANCE 1.0f
 #define TEAPOTS_AMOUNT 10
-#define GROUND_AREA 250
+#define GROUND_AREA 30
+#define ATTACK_DISTANCE 5
+#define	COOLDOWNTIME_MS 1500
 
 // Structs 
 // Struct da janela

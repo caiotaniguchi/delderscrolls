@@ -61,6 +61,7 @@ class DinamicObj : public Object
 		void jump();									 // Set the upSpeedMomentum if the Object is on the ground
 		void throwback(float playerx, float playerz);    // Function that throw the Enemy backward and upward
 		bool detectColision();							 // Colission Detection Function
+		bool detectMovingColision();
 	private:
 
 };
@@ -71,8 +72,10 @@ class DinamicObj : public Object
 class Player : public DinamicObj
 {
 public:
-	Player(float Posx, float Posz, int hp, int ap, float sp);		// Constructor, start the object
-	bool walkbuffer[10];											// Movement Buffer
+	Player(float Posx, float Posz,int hp, int ap, float sp);		// Constructor, start the object
+	bool walkbuffer[10];
+	bool shiftBuffer;												// Movement Buffer
+	bool jumpBuffer;
 	float theta;													// Used for horizontal rotation
 	float phi; 														// Used for vertical rotation
 	int   experience;
@@ -95,14 +98,15 @@ private:
 	bool wanderflag;  // Flag used to determine if the Enemy is wandering of following the player
 	float wanderX;	  // X component of a random wandering final position 	
 	float wanderZ;	  // Z component of a random wandering final position
+	float lastAttackTime;
 public:
 	// Constructor of the Enemy. Set position, HP, Attack, Speed
-	Enemy(float Posx, float Posz, int hp, int ap, float sp);
+	Enemy(float Posx, float Posz, float radius, int hp, int ap, float sp);
 
 	// Methods
 	void wander();								// Wandering function (change the wanderX, wanderZ if not set)
 	void attackPlayer();						// AttackPlayer Function (not implemented yet)
-	void run(float playerx, float playerz);		// Run the Enemy object. Make the function calls depending the case.
+	void run(Player &player);		// Run the Enemy object. Make the function calls depending the case.
 													// It make wander() call if too far from player and follow player 
 													// If close enough.
 

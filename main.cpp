@@ -71,7 +71,7 @@ void display()
 	// Draw Enne
 
 	player.physics(dtActualTime - dtEndTime);
-	updateEnemies(dtActualTime - dtEndTime, enemyList, player.x, player.z);
+	updateEnemies(dtActualTime - dtEndTime, enemyList, player);
 	// Draw ennemies end
 	
 	// Load and place objects in the terrain
@@ -93,12 +93,13 @@ void display()
 	dtEndTime = glutGet(GLUT_ELAPSED_TIME);
 
 	// Write text
-	writeText("", -0.9,-0.8);
-	writeText("Player", -0.9,-0.8);
-	sprintf(string,"Health: %d", player.healthpoints);
-	writeText(string, -0.9,-0.9);
+	//writeText("", 0,0);
+	writeText(" ", -1,-1);
+	writeText("Player 1", -0.9,0.8);
+	sprintf(string,"Health: %i", player.healthpoints);
+	writeText(string, -0.9,0.9);
 	sprintf(string,"Experience: %d", player.experience);
-	writeText(string, -0.65,-0.8);
+	writeText(string, -0.65,0.8);
 
 
 	// Final flush
@@ -141,7 +142,7 @@ void keyboard ( unsigned char key, int mousePositionX, int mousePositionY )
   switch ( key ) 
   {
     case KEY_ESCAPE:        
-      exit ( 0 );   
+      exit ( 0 ); 
      case 'w':
         player.walkbuffer[FRONT] = true;
         break;
@@ -154,16 +155,16 @@ void keyboard ( unsigned char key, int mousePositionX, int mousePositionY )
      case 'd':
      	player.walkbuffer[RIGHT] = true;
      	break;
-     case 32:
-     	player.jump();
-     	break;
+     
     }
+
+  if(key == 32) player.jumpBuffer = true;
 
   switch( glutGetModifiers() )
   {
   	case GLUT_ACTIVE_SHIFT:
-  	player.speed = 3;
-   	break;
+  		player.shiftBuffer = true;
+   		break;
   }
   // Request Redisplay
   glutPostRedisplay();
@@ -186,13 +187,16 @@ void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
      case 'd':
      	player.walkbuffer[RIGHT] = false;
      	break;
+     
   }
+
+  if(key == 32) player.jumpBuffer = false;
 
   switch( glutGetModifiers() )
   {
   	case !GLUT_ACTIVE_SHIFT:
-  	player.speed = 1;
-   	break;
+  		player.shiftBuffer = false;
+   		break;
   }
   // Request Redisplay
   glutPostRedisplay();
@@ -212,6 +216,7 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
   	case 2:
   		//enemyList[0].jump();
     	//makejump(0, enemyList);
+  		//player.jump();// = true;
     	break;
   	}
   	// Request Redisplay
@@ -257,21 +262,11 @@ int main(int argc, char **argv)
 	mouse.w = WIN_WIDTH;
 	mouse.h = WIN_HEIGHT;
 
-	/*
-	// Add the Ennemies to the vector
-	enemyList.push_back(Enemy(+15,0,100,100,0.07));
-	enemyList.push_back(Enemy(-25,0,100,100,0.07));
-	enemyList.push_back(Enemy(+25,-25,100,100,0.07));
-	enemyList.push_back(Enemy(+15,15,100,100,0.07));
-	enemyList.push_back(Enemy(-25,25,100,100,0.07));
-	enemyList.push_back(Enemy(+25,-25,100,100,0.07));
-	*/
-
 	// Generate random tree positions
 	for(int i=0; i <TREEAMOUNT+1; i++)
 	{
-		xpos[i] = rand() % 100 -50;
-		zpos[i] = rand() % 100 -50;
+		xpos[i] = rand() % (2*GROUND_AREA) -GROUND_AREA;
+		zpos[i] = rand() % (2*GROUND_AREA) -GROUND_AREA;
 	}
 
 	// Start OpenGL Machine

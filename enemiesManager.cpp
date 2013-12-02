@@ -8,31 +8,19 @@
 #include <stdlib.h>
 
 using namespace std;
+int level =0;
 
 // loop across an enemy vector and update they positions
-void updateEnemies(float dt, vector<Enemy>& enemyList,float playerx, float playerz)
+void updateEnemies(float dt, vector<Enemy>& enemyList, Player &player)
 {
-	char lifeBar[300];
-	// Debugg Strings
-
-	//std::cout << "TEAPOTS HEALTH";
-	
 	for(int i =0; i < enemyList.size(); i++)
 	{
-		// Debugg Strings
-		//std::cout << " | " ;
-		//std::cout << enemyList[i].healthpoints;
-		
 		enemyList[i].physics(dt);
-		enemyList[i].run(playerx,playerz);
-	}
-	//std::cout << "\n";
-
-	if(enemyList.size() < TEAPOTS_AMOUNT)
-	{
-		enemyList.push_back(Enemy(rand() % 100 -50,rand() % 100 -50,50,100,0.07));
+		enemyList[i].run(player);
 	}
 
+	if(enemyList.size() < TEAPOTS_AMOUNT + level)
+		enemyList.push_back(Enemy(rand() % (2*GROUND_AREA) -GROUND_AREA,rand() % (2*GROUND_AREA) -GROUND_AREA,2,50,100,0.07));
 }
 
 
@@ -51,7 +39,7 @@ void checkhit(vector<Enemy>& enemyList, Player &player)
 		// compute the distance to the final position
 		float module = sqrt(directionx*directionx + directionz*directionz);
 
-		if(module < 5)
+		if(module < ATTACK_DISTANCE)
 		{
 			// Evaluate the inner product between the vector Enemy-Player and Player Eyes Direction
 			// If the ARCOS of this product is bigger than a specific angle the attack wont happen
@@ -82,6 +70,7 @@ void checkhit(vector<Enemy>& enemyList, Player &player)
 				{
 					enemyList.erase(enemyList.begin()+i);
 					player.experience += 100;
+					level++;
 				}
 		}		
 	}
