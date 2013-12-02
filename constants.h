@@ -1,5 +1,8 @@
-// CONSTANTES 
+/***************************************************************/
+/* 							 CONSTANTS					       */
+/***************************************************************/
 
+// Keyboard key constants
 #define KEY_ESCAPE 27
 #define FRONT 1
 #define BACK  2
@@ -11,37 +14,28 @@
 #define A_KEY	97
 #define D_KEY	100
 
+// Glut window constants
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
 
-// Game Constants
+// Render Constants
+#define MAX_RENDER_DISTANCE 200.0f
+#define MIN_RENDER_DISTANCE 1.0f
+#define FIELDOFVIEWANGLE 45		// graus
+
+// // Game Constants \\ \\
+// Physics
 #define GRAVITY -10000
 #define AIRFRICTION 2
 #define GROUNDLIMIT 0.9
-#define TREEAMOUNT 50
-#define MAX_RENDER_DISTANCE 200.0f
-#define MIN_RENDER_DISTANCE 1.0f
+#define	ELASTIC_COEFFICIENT 0.8
+#define BALLTIMEOUT 3000       		// millisecs
+#define LEVEL_UP_EXPERIENCE 1000
+
+// Gameplay
+#define TREEAMOUNT 20
 #define TEAPOTS_AMOUNT 10
 #define GROUND_AREA 30
 #define ATTACK_DISTANCE 5
 #define	COOLDOWNTIME_MS 1500
-
-// Structs 
-// Struct da janela
-typedef struct {
-    int width;
-	int height;
-	char* title;
-
-	float field_of_view_angle;
-	float z_near;
-	float z_far;
-} glutWindow;
-
-// struct da posicao do mouse
-typedef struct {
-	float x;
-	float y;
-	int w;
-	int h;
-} mousePos;
+#define ATTACK_ANGLE 20

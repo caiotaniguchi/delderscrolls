@@ -7,8 +7,6 @@
 #include <vector> 
 #include <iostream>
 
-//extern std::vector<Object> objectsList;
-
 /***************************************************************/
 /* 			General Object Class Methods Definition			   */
 /***************************************************************/
@@ -36,6 +34,15 @@ void Object::draw()
 	glPopMatrix();
 }
 
+void Object::draw2()
+{
+	glPushMatrix();
+		glColor3f(1.0,0,0);
+			glTranslatef(x,y,z);
+		    glRotatef(directionAngle,0,1,0);
+		    glutSolidSphere(0.5,10,10);
+	glPopMatrix();
+}
 
 
 /***************************************************************/
@@ -48,6 +55,16 @@ DinamicObj::DinamicObj(float Posx, float Posz, int hp, int ap, float sp) : Objec
 	healthpoints = hp;
 	attackpoints = ap;
 	speed 		 = sp;
+}
+
+DinamicObj::DinamicObj(float Posx, float Posz, float Posy,float upBall, float xBall, float zBall, float currenttime) : Object(Posx,Posz)
+{
+	creationTime = currenttime;	
+	y = Posy;
+	upSpeedMomentum = upBall;		// Upward speed (for jumping)
+	throwbackx = -xBall;
+	throwbackz = -zBall;
+
 }
 
 // Collision Detection:
@@ -95,6 +112,7 @@ bool DinamicObj::detectColision()
 	return false;
 }
 
+// Detection Collision for moving objects
 bool DinamicObj::detectMovingColision()
 {
 	extern std::vector<Enemy> enemyList;
@@ -109,10 +127,11 @@ bool DinamicObj::detectMovingColision()
 		radiusz = z - enemyList[i].z;
 
 		float module = sqrt(radiusx*radiusx + radiusz*radiusz);
+		
 		// skip if enmylist is yourself
 		if(module == 0) continue;
 
-		if (module <= enemyList[i].colisionRadius && enemyList[i].y < GROUNDLIMIT)
+		if (module <= enemyList[i].colisionRadius && enemyList[i].y < GROUNDLIMIT && (enemyList[i].colisionHeight > y > enemyList[i].y) )
 		{
 			x = enemyList[i].x + enemyList[i].colisionRadius*(radiusx/module);
 			z = enemyList[i].z + enemyList[i].colisionRadius*(radiusz/module);
@@ -151,8 +170,6 @@ void DinamicObj::move(float dirx, float dirz)
 
 	// If the Object is close enough he stop moving
 	if(module < 3){return;}
-
-
 
 	// If the Object is not close enough, make a step
 	if(sqrt(throwbackx*throwbackx + throwbackz*throwbackz) == 0)
@@ -211,6 +228,7 @@ void DinamicObj::physics(float dt)
 	}
 }
 
+// Function to throw and object back
 void DinamicObj::throwback(float playerx, float playerz)
 {
 	float directionx = playerx - x;
@@ -231,8 +249,9 @@ void DinamicObj::throwback(float playerx, float playerz)
 /***************************************************************/
 
 // Classe Enemy Constructor
-Enemy::Enemy(float Posx, float Posz, float radius,int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
+Enemy::Enemy(float Posx, float Posz, float radius,int hp, int ap, float sp, float height) : DinamicObj(Posx,Posz, hp, ap, sp)
 {
+	colisionHeight = height;
 	wanderflag = false;
 	y=GROUNDLIMIT;
 	colisionRadius = radius;
@@ -292,7 +311,7 @@ void Enemy::wander()
 // Player Constructor Function. Set the Teapot Y position on 4
 Player::Player(float Posx, float Posz, int hp, int ap, float sp) : DinamicObj(Posx,Posz, hp, ap, sp)
 {
-	y = 4;
+	y = GROUNDLIMIT;
 }
 
 // Horizontal Camera Movement
@@ -311,50 +330,53 @@ void Player::pitch(int pixels)
 // Camera Setting Function
 void Player::LookAt()
 {
-	gluLookAt(x, y, z, x + cos(theta), y + sin(phi), z + sin(theta),0,1,0);
+	// position and points the camera to the desired position
+	gluLookAt(x, y+4, z, x + cos(theta), y+ 4 + sin(phi), z + sin(theta),0,1,0);
 }
 
 // Change the position of the camera on the space
 void Player::updatePosition()
 {
+	// Keep the last position in case of colision
 	float lastx = x;
 	float lastz = z;
 
 	if(jumpBuffer == true)	jump();
 
+	// Increases Speed
 	if(shiftBuffer == true)
 		speed = 3;
 	else speed = 1;
 
-	if(y<4) y=4;
+	// Keep a certain height from the ground
+	if(y<GROUNDLIMIT) y=GROUNDLIMIT;
 
+	// Check if there is any movment to be done
 	if (walkbuffer[FRONT] == true)
 	{
 		x += speed*cos(theta)/9.0;
 		z += speed*sin(theta)/9.0;
-		//std::cout << "FRONT | ";
 	}
 
 	if (walkbuffer[BACK] == true)
 	{
 		x -= speed*cos(theta)/9.0;
 		z -= speed*sin(theta)/9.0;
-		//std::cout << "BACK | ";
 	}
 
 	if (walkbuffer[LEFT] == true)
 	{
 		x += speed*sin(theta)/9.0;
 		z -= speed*cos(theta)/9.0;
-		//std::cout << "LEFT | ";
 	}
 
 	if (walkbuffer[RIGHT] == true)
 	{
 		x -= speed*sin(theta)/9.0;
 		z += speed*cos(theta)/9.0;
-		//std::cout << "RIGHT | ";
 	}
+
+	// Chcek if there is a colision
 	if(detectColision()  || detectMovingColision())
 	{	
 		x = lastx;

@@ -1,3 +1,4 @@
+#include <GL/glut.h>	   // The GL Utility Toolkit (GLUT) Header
 #include <vector>
 #include <cmath>
 #include "objClasses.h"
@@ -8,24 +9,28 @@
 #include <stdlib.h>
 
 using namespace std;
-int level =0;
+
+/***************************************************************/
+/* 							 Enemies Manager			       */
+/***************************************************************/
 
 // loop across an enemy vector and update they positions
 void updateEnemies(float dt, vector<Enemy>& enemyList, Player &player)
 {
 	for(int i =0; i < enemyList.size(); i++)
 	{
-		enemyList[i].physics(dt);
-		enemyList[i].run(player);
+		enemyList[i].physics(dt);		// Updates Physics events
+		enemyList[i].run(player);		// Take decsions and draw enemy 
 	}
 
-	if(enemyList.size() < TEAPOTS_AMOUNT + level)
-		enemyList.push_back(Enemy(rand() % (2*GROUND_AREA) -GROUND_AREA,rand() % (2*GROUND_AREA) -GROUND_AREA,2,50,100,0.07));
+	// Enemy Generator
+	if(enemyList.size() < TEAPOTS_AMOUNT + player.level)
+		enemyList.push_back(Enemy(rand() % (2*GROUND_AREA) -GROUND_AREA,rand() % (2*GROUND_AREA) -GROUND_AREA,2,50,100,0.07, 2));
 }
 
 
-// Loop across a vector of enemies and verify if they were attacked. if positive, throwback enemy and remove healthpoints
-// From target
+// Loop across a vector of enemies and verify if they were attacked. 
+//if positive, throwback enemy and remove healthpoints from target
 void checkhit(vector<Enemy>& enemyList, Player &player)
 {
 
@@ -54,11 +59,10 @@ void checkhit(vector<Enemy>& enemyList, Player &player)
 			
 			// inner product
 			float angle = 360/(2*M_PI)*acos((playerDirectionx*auxVectorx + playerDirectionz*auxVectorz)/(moduleAuxVector*modulePlayerDirection));
-
-			//std::cout << angle;
 			
 			// Check Angle
-			if( angle < 20 )
+			// If the direction of the player to the enemy is inferior than
+			if( angle < ATTACK_ANGLE )
 			{
 				enemyList[i].throwback(player.x,player.z);
 				enemyList[i].healthpoints -= player.attackpoints;
@@ -70,8 +74,66 @@ void checkhit(vector<Enemy>& enemyList, Player &player)
 				{
 					enemyList.erase(enemyList.begin()+i);
 					player.experience += 100;
-					level++;
+
+					if(player.experience >= LEVEL_UP_EXPERIENCE)
+					{
+						player.level++;
+						player.experience =0;
+					}
 				}
 		}		
 	}
+}
+
+
+/***************************************************************/
+/* 						BALL MANAGER					       */
+/***************************************************************/
+void throwball(Player player)
+{
+	extern std::vector<DinamicObj> ballList;
+	//DinamicObj(float Posx, float Posz, int hp, int ap, float sp, float upSpeedMomentum, float throwbackx, float throwbacky);
+	float module = sqrt(player.x*player.x +player.z + player.z);
+
+	ballList.push_back(DinamicObj(player.x, player.z, player.y +4, 100, 100*cos(player.theta), 100*sin(player.theta), glutGet(GLUT_ELAPSED_TIME)));
+}
+
+void updateBalls( float dt)
+{
+	extern std::vector<DinamicObj> ballList;
+	float lastUpMomentum;
+	float lastthrowbackx;
+	float lastthrowbackz;
+
+
+
+	for(int i =0; i < ballList.size(); i++)
+	{	
+		if(glutGet(GLUT_ELAPSED_TIME) - ballList[i].creationTime > BALLTIMEOUT)	
+		{	
+		ballList.erase(ballList.begin()+i);
+		}
+
+		lastUpMomentum = ballList[i].upSpeedMomentum;
+		lastthrowbackx = ballList[i].throwbackx;
+		lastthrowbackz = ballList[i].throwbackz;
+
+		if(ballList[i].detectColision() || ballList[i].detectMovingColision())
+		{
+			ballList[i].throwbackx = -ballList[i].throwbackx*ELASTIC_COEFFICIENT ;
+			ballList[i].throwbackz = -ballList[i].throwbackz*ELASTIC_COEFFICIENT;
+
+		}
+
+		ballList[i].physics(dt);
+		
+		if (ballList[i].y < GROUNDLIMIT)
+			{
+				ballList[i].upSpeedMomentum = -lastUpMomentum*ELASTIC_COEFFICIENT;
+				ballList[i].throwbackx = lastthrowbackx*ELASTIC_COEFFICIENT;
+				ballList[i].throwbackz = lastthrowbackz*ELASTIC_COEFFICIENT;
+			}
+		ballList[i].draw2();
+	}
+	//enemyList[i].run(player)
 }

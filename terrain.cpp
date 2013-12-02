@@ -6,7 +6,12 @@
 #include "constants.h"
 #include "objClasses.h"
 #include <vector>
+
 using namespace std;
+
+/***************************************************************/
+/* 					 Terrain Generator					 	  */
+/***************************************************************/
 void loadTerrain(vector<Object>& objectsList)
 {
 	extern float xpos[TREEAMOUNT];
@@ -24,43 +29,14 @@ void loadTerrain(vector<Object>& objectsList)
 		objectsList.push_back(Object(xpos[i],zpos[i],3));
 	}		
 
-
-	/*
+	// Draw ground
 	glPushMatrix();
-	glColor3f(1.0,1.0,0.2);
-	glTranslatef(-10,0,20);
-	glRotatef(-90,1,0,0);
-	glutSolidCone(2, 10, 20, 20);
+	glColor3f(0.0,0.4,0.0);
+	glBegin(GL_QUADS);
+		glVertex4f(-GROUND_AREA,0,-GROUND_AREA,1);
+		glVertex4f(-GROUND_AREA,0,GROUND_AREA,1);
+		glVertex4f(GROUND_AREA,0,GROUND_AREA,1);
+		glVertex4f(GROUND_AREA,0,-GROUND_AREA,1);
+	glEnd();
 	glPopMatrix();
-	objectsList.push_back(Object(-10,20,3));
-	*/
-}
-
-void writeText(char * string, float x, float y)
-{
-	glMatrixMode( GL_PROJECTION ) ;
-	glPushMatrix() ; 					// save
-	glLoadIdentity();					// and clear
-	glMatrixMode( GL_MODELVIEW ) ;
-	glPushMatrix() ;
-	glLoadIdentity() ;
-	glDisable( GL_DEPTH_TEST ) ; 		// also disable the depth test so renders on top
-	glDisable(GL_LIGHTING);
-	glDisable(GL_LIGHT0);
-	
-	glRasterPos2f( x,y ) ;				// center of screen. (-1,0) is center left.
-	glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-	const char * p = string ;
-	do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *p ); 
-	while( *(++p) );
-	
-	glEnable( GL_DEPTH_TEST ) ; 		// Turn depth testing back on
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	
-	glMatrixMode( GL_PROJECTION ) ;
-	glPopMatrix() ; 					// revert back to the matrix I had before.
-	glMatrixMode( GL_MODELVIEW ) ;
-	glPopMatrix();
-
 }
