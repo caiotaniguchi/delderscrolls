@@ -113,7 +113,7 @@ bool DinamicObj::detectColision()
 }
 
 // Detection Collision for moving objects
-bool DinamicObj::detectMovingColision()
+bool DinamicObj::detectMovingColision(bool doesHit)
 {
 	extern std::vector<Enemy> enemyList;
 
@@ -133,6 +133,8 @@ bool DinamicObj::detectMovingColision()
 
 		if (module <= enemyList[i].colisionRadius && enemyList[i].y < GROUNDLIMIT && (enemyList[i].colisionHeight > y > enemyList[i].y) )
 		{
+			if(doesHit == true) enemyList[i].healthpoints -= BALLHITPOINTS;
+
 			x = enemyList[i].x + enemyList[i].colisionRadius*(radiusx/module);
 			z = enemyList[i].z + enemyList[i].colisionRadius*(radiusz/module);
 			return true;
@@ -176,7 +178,7 @@ void DinamicObj::move(float dirx, float dirz)
 	{
 		x += speed*directionx/module;
 		z += speed*directionz/module;
-		if(detectColision() || detectMovingColision())
+		if(detectColision() || detectMovingColision(NOHIT))
 		{
 			x -= speed*directionx/module;
 			z -= speed*directionz/module;
@@ -239,8 +241,8 @@ void DinamicObj::throwback(float playerx, float playerz)
 	{
 		upSpeedMomentum = 200;
 
-		throwbackx = 1*(playerx - x)/module;
-		throwbackz = 1*(playerz - z)/module;
+		throwbackx = 2*(playerx - x)/module;
+		throwbackz = 2*(playerz - z)/module;
 	}
 }
 
@@ -377,7 +379,7 @@ void Player::updatePosition()
 	}
 
 	// Chcek if there is a colision
-	if(detectColision()  || detectMovingColision())
+	if(detectColision()  || detectMovingColision(NOHIT))
 	{	
 		x = lastx;
 		z = lastz;

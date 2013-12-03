@@ -241,7 +241,7 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
 // Timer Callback function
 // Request Redisplay without event
 void simulate(int lol){
-
+	checkEnemyStatus(enemyList, player);
 	player.updatePosition();
 	//updateEnemies(5, enemyList, player.x, player.y);
 	glutPostRedisplay();

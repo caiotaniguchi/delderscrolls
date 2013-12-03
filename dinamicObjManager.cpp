@@ -31,6 +31,26 @@ void updateEnemies(float dt, vector<Enemy>& enemyList, Player &player)
 
 // Loop across a vector of enemies and verify if they were attacked. 
 //if positive, throwback enemy and remove healthpoints from target
+void checkEnemyStatus(vector<Enemy>& enemyList, Player &player)
+{
+
+	for(int i =0; i < enemyList.size(); i++)
+	{	
+					// erase the enemy from the enemylist if healpoints inferior than zero
+			if(enemyList[i].healthpoints <= 0)	
+				{
+					enemyList.erase(enemyList.begin()+i);
+					player.experience += 100;
+
+					if(player.experience >= LEVEL_UP_EXPERIENCE)
+					{
+						player.level++;
+						player.experience =0;
+					}
+				}	
+		
+	}
+}
 void checkhit(vector<Enemy>& enemyList, Player &player)
 {
 
@@ -69,7 +89,9 @@ void checkhit(vector<Enemy>& enemyList, Player &player)
 
 			}
 
-			// erase the enemy from the enemylist if healpoints inferior than zero
+
+		}	
+					// erase the enemy from the enemylist if healpoints inferior than zero
 			if(enemyList[i].healthpoints <= 0)	
 				{
 					enemyList.erase(enemyList.begin()+i);
@@ -80,8 +102,7 @@ void checkhit(vector<Enemy>& enemyList, Player &player)
 						player.level++;
 						player.experience =0;
 					}
-				}
-		}		
+				}	
 	}
 }
 
@@ -118,7 +139,7 @@ void updateBalls( float dt)
 		lastthrowbackx = ballList[i].throwbackx;
 		lastthrowbackz = ballList[i].throwbackz;
 
-		if(ballList[i].detectMovingColision())
+		if(ballList[i].detectMovingColision(HIT))
 		{
 			ballList.erase(ballList.begin()+i);
 		}

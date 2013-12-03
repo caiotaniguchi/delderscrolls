@@ -32,7 +32,8 @@
 #define BALLTIMEOUT 3000       		// millisecs
 #define LEVEL_UP_EXPERIENCE 1000
 #define HIT 				true
-#define NO_HIT				false
+#define NOHIT				false
+#define BALLHITPOINTS		10
 
 // Gameplay
 #define TREEAMOUNT 20

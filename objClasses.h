@@ -55,7 +55,7 @@ class DinamicObj : public Object
 		void jump();									 // Set the upSpeedMomentum if the Object is on the ground
 		void throwback(float playerx, float playerz);    // Function that throw the Enemy backward and upward
 		bool detectColision();							 // Colission Detection Function
-		bool detectMovingColision();
+		bool detectMovingColision(bool doesHIT);
 	private:
 
 };
