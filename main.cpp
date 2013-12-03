@@ -111,10 +111,12 @@ void initialize ()
     glEnable(GL_LIGHT0);
 
     // FOG
+	//float FogCol[3]={0.8f,0.8f,0.8f};
 	//glEnable (GL_FOG);
-    //glFogi (GL_FOG_MODE, GL_EXP2);
-    //glFogf (GL_FOG_COLOR,10);
-    //fglFogf (GL_FOG_DENSITY, 0);
+	//glFogi(GL_FOG_MODE, GL_LINEAR); // Note the 'i' after glFog - the GL_LINEAR constant is an integer.
+ 	//glFogf(GL_FOG_START, 10.f);
+ 	//glFogf(GL_FOG_END, 40.f);
+	//glFogf(GL_FOG_DENSITY, 2.f);
 
     glEnable(GL_DEPTH_TEST);
     glEnable( GL_COLOR_MATERIAL );
@@ -224,19 +226,14 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
 	switch( key ) 
   	{  
     case 0:
-    	//enemy1.throwback(player.x,player.z);
-    	//enemy1.attack();
     	checkhit(enemyList, player);
-    	
-    	break;
+	   	break;
+  	
   	case 2:
-
   		throwball(player);
-  		//enemyList[0].jump();
-    	//makejump(0, enemyList);
-  		//player.jump();// = true;
     	break;
   	}
+  	
   	// Request Redisplay
   	glutPostRedisplay();
 }
@@ -263,6 +260,7 @@ void reshape(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60.0,1.0,1.5,80.0);
+	//gluPerspective(45.f, 800.f / 600.f, 1.f, 60.0f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }

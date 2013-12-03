@@ -95,7 +95,7 @@ void throwball(Player player)
 	//DinamicObj(float Posx, float Posz, int hp, int ap, float sp, float upSpeedMomentum, float throwbackx, float throwbacky);
 	float module = sqrt(player.x*player.x +player.z + player.z);
 
-	ballList.push_back(DinamicObj(player.x, player.z, player.y +4, 100, 100*cos(player.theta), 100*sin(player.theta), glutGet(GLUT_ELAPSED_TIME)));
+	ballList.push_back(DinamicObj(player.x, player.z, player.y +3+ 4*sin(player.phi), 100, 100*cos(player.theta), 100*sin(player.theta), glutGet(GLUT_ELAPSED_TIME)));
 }
 
 void updateBalls( float dt)
@@ -118,7 +118,12 @@ void updateBalls( float dt)
 		lastthrowbackx = ballList[i].throwbackx;
 		lastthrowbackz = ballList[i].throwbackz;
 
-		if(ballList[i].detectColision() || ballList[i].detectMovingColision())
+		if(ballList[i].detectMovingColision())
+		{
+			ballList.erase(ballList.begin()+i);
+		}
+
+		if(ballList[i].detectColision())
 		{
 			ballList[i].throwbackx = -ballList[i].throwbackx*ELASTIC_COEFFICIENT ;
 			ballList[i].throwbackz = -ballList[i].throwbackz*ELASTIC_COEFFICIENT;

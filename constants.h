@@ -31,6 +31,8 @@
 #define	ELASTIC_COEFFICIENT 0.8
 #define BALLTIMEOUT 3000       		// millisecs
 #define LEVEL_UP_EXPERIENCE 1000
+#define HIT 				true
+#define NO_HIT				false
 
 // Gameplay
 #define TREEAMOUNT 20
