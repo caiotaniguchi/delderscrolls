@@ -5,15 +5,9 @@
 
 // Soh usado para testes
 #include <iostream>
-
+#include "loadObj.h"
 
 using namespace std;
-
-struct vertex {
-	float x;
-	float y;
-	float z;
-};
 
 /*
  * use: objModel[face][vertex].coordinate
@@ -22,7 +16,7 @@ struct vertex {
  *   for (int j = 0; j < objModel[i].size(); j++)
  *     glVertex3f(objModel[i][j].x, objModel[i][j].y, objModel[i][j].z)
  */
-vector<vector<vertex> > objModel;
+
 
 // Converts a string to type T
 template <class T>
@@ -33,6 +27,7 @@ T fromStr(std::string s){
    return result;
 }
 
+vector <vector<vertex> > objModel;
  
 // Reads a .obj file. Saves all the vertex and face in objModel
 int import_model (string fileName) {
@@ -96,10 +91,12 @@ int import_model (string fileName) {
 		}
 	}
 	objFile.close();
+
+	
 	return 0;
 }
 
-
+/*
 
 int main (void) {
 	int error;
@@ -114,3 +111,4 @@ int main (void) {
 	}
 	return 0;
 }
+*/

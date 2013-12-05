@@ -6,6 +6,11 @@
 #include "objClasses.h"	   // Object classes File	
 #include <vector> 
 #include <iostream>
+#include "loadObj.h"
+#include <string>
+#include <vector>
+#include <fstream>
+#include <sstream>
 
 /***************************************************************/
 /* 			General Object Class Methods Definition			   */
@@ -24,15 +29,44 @@ Object::Object(float Posx, float Posz, float radius)
 	colisionRadius = radius;
 }
 
+extern vector <vector<vertex> > objModel;
+int erro = import_model ("cube.obj");
+
 void Object::draw()
 {
+	using namespace std;
+	
+
 	glPushMatrix();
 		glColor3f(1.0,1.0,1.0);
-			glTranslatef(x,y,z);
-		    glRotatef(directionAngle,0,1,0);
-		    glutSolidTeapot(1);
+		glTranslatef(x,y,z);
+		glRotatef(directionAngle,0,1,0);
+
+	for (unsigned i = 0; i < objModel.size(); i++) 
+	{
+		
+		glBegin(GL_QUADS);
+		for (unsigned j = 0; j < objModel[i].size(); j++)
+			glVertex3f(objModel[i][j].x,objModel[i][j].y,objModel[i][j].z);
+		glEnd();
+		
+	}
+
 	glPopMatrix();
 }
+
+
+// void Object::draw()
+// {
+// 	glPushMatrix();
+// 		glColor3f(1.0,1.0,1.0);
+// 			glTranslatef(x,y,z);
+// 		    glRotatef(directionAngle,0,1,0);
+// 		    glutSolidTeapot(1);
+// 	glPopMatrix();
+// }
+
+
 
 void Object::draw2()
 {
