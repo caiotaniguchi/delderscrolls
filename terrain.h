@@ -6,5 +6,4 @@
 using namespace std;
 
 void loadTerrain(vector<Object>& objectsList);
-void writeText(char * string, float x, float y);
 #endif

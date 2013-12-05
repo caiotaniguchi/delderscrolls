@@ -25,20 +25,30 @@
 
 // // Game Constants \\ \\
 // Physics
-#define GRAVITY -10000
+#define GRAVITY -3000
 #define AIRFRICTION 2
 #define GROUNDLIMIT 0.9
-#define	ELASTIC_COEFFICIENT 0.8
+#define	ELASTIC_COEFFICIENT 0.9
 #define BALLTIMEOUT 3000       		// millisecs
 #define LEVEL_UP_EXPERIENCE 1000
-#define HIT 				true
-#define NOHIT				false
 #define BALLHITPOINTS		10
 
 // Gameplay
 #define TREEAMOUNT 20
 #define TEAPOTS_AMOUNT 10
-#define GROUND_AREA 30
+#define GROUND_AREA 60
 #define ATTACK_DISTANCE 5
 #define	COOLDOWNTIME_MS 1500
 #define ATTACK_ANGLE 20
+#define ENEMY_SPEED 0.2
+#define LEVEL_FACTOR 2     //amount of new monster per level
+#define SPRINT_SPEED 4
+#define THROWPOWER 1.5
+
+// General Use Constants
+#define HIT 				true
+#define NOHIT				false
+#define HUD_TEXT			0
+#define POP_UP				1
+#define TITLE_TEXT 			2
+#define PAUSED_TEXT			3

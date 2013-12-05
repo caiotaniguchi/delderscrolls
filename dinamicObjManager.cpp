@@ -24,8 +24,8 @@ void updateEnemies(float dt, vector<Enemy>& enemyList, Player &player)
 	}
 
 	// Enemy Generator
-	if(enemyList.size() < TEAPOTS_AMOUNT + player.level)
-		enemyList.push_back(Enemy(rand() % (2*GROUND_AREA) -GROUND_AREA,rand() % (2*GROUND_AREA) -GROUND_AREA,2,50,100,0.07, 2));
+	if(enemyList.size() < TEAPOTS_AMOUNT + player.level*LEVEL_FACTOR)
+		enemyList.push_back(Enemy(rand() % (2*GROUND_AREA) -GROUND_AREA,rand() % (2*GROUND_AREA) -GROUND_AREA,2,50,100,ENEMY_SPEED, 2));
 }
 
 

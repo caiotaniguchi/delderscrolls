@@ -21,12 +21,19 @@ void loadTerrain(vector<Object>& objectsList)
 	for(int i=0; i <TREEAMOUNT+1; i++)
 	{
 		glPushMatrix();
-		glColor3f(0.0,1,0.0);
 		glTranslatef(xpos[i],0,zpos[i]);
+		glColor3f(0.545, 0.271, 0.075);
 		glRotatef(-90,1,0,0);
-		glutSolidCone(2, 10, 20, 20);
+		gluCylinder(gluNewQuadric(),0.5,0.5,5,5,5);
 		glPopMatrix();
-		objectsList.push_back(Object(xpos[i],zpos[i],3));
+		glPushMatrix();
+		glColor3f(0.0,1,0.0);
+		glTranslatef(xpos[i],4,zpos[i]);
+		glRotatef(-90,1,0,0);
+		glutSolidCone(2, 10, 10, 10);
+		glPopMatrix();
+
+		objectsList.push_back(Object(xpos[i],zpos[i],2));
 	}		
 
 	// Draw ground

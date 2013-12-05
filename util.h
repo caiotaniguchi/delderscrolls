@@ -3,7 +3,7 @@
 /* 							 UTIL.H						       */
 /***************************************************************/
 
-void writeText(char * string, float x, float y);
+void writeText(char * string, float x, float y, int FONT);
 
 
 // Structs 

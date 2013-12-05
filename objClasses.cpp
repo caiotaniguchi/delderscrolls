@@ -180,8 +180,8 @@ void DinamicObj::move(float dirx, float dirz)
 		z += speed*directionz/module;
 		if(detectColision() || detectMovingColision(NOHIT))
 		{
-			x -= speed*directionx/module;
-			z -= speed*directionz/module;
+			x -= THROWPOWER*directionx/module;
+			z -= THROWPOWER*directionz/module;
 		}
 	}
 }
@@ -241,8 +241,8 @@ void DinamicObj::throwback(float playerx, float playerz)
 	{
 		upSpeedMomentum = 200;
 
-		throwbackx = 2*(playerx - x)/module;
-		throwbackz = 2*(playerz - z)/module;
+		throwbackx = 3*(playerx - x)/module;
+		throwbackz = 3*(playerz - z)/module;
 	}
 }
 
@@ -347,7 +347,7 @@ void Player::updatePosition()
 
 	// Increases Speed
 	if(shiftBuffer == true)
-		speed = 3;
+		speed = SPRINT_SPEED;
 	else speed = 1;
 
 	// Keep a certain height from the ground

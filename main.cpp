@@ -32,6 +32,7 @@ mousePos mouse;
 float Rotation;
 float dtEndTime;
 float dtActualTime;
+int gameMode = 0;
 
 // Random tree positions array
 float xpos[TREEAMOUNT];
@@ -49,13 +50,34 @@ std::vector<DinamicObj> ballList;
 // Callback function for the main display
 void display() 
 {	
+	// Title Screen
+	if(gameMode == 0)
+	{
+		glClearColor(0.6, 0.6, 0.6, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		char string[300];
+		sprintf(string,"DELDERSCROLLS:", player.healthpoints);
+		writeText(string, -0.4,0.2,TITLE_TEXT);
+		sprintf(string,"RAGE OF TEAPOTS", player.healthpoints);
+		writeText(string, -0.3,0.1,TITLE_TEXT);
+		sprintf(string,"PRESS ENTER TO PLAY", player.healthpoints);
+		writeText(string, -0.35,-0.2,TITLE_TEXT);
+
+	}
+
+	// Game Mode
+	if(gameMode == 1)
+	{
+	glClearColor(0.0, 0.0, 0.6, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glPushMatrix();
+
 	char string[300];
 	// Keep the actual time that this frame is been rendeered
 	dtActualTime = glutGet(GLUT_ELAPSED_TIME);
 
 	//Clear Buffers
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glPushMatrix();
+
 	
 	// Modify the position where the player is 
 	// and the position where he is lookin at
@@ -73,19 +95,30 @@ void display()
 
 	// Drawer end 
 	glPopMatrix();
+	
 	// Keep the time when the end of the frame was finished
 	dtEndTime = glutGet(GLUT_ELAPSED_TIME);
 
 	// Write text
 	//writeText("", 0,0);
-	writeText(" ", -1,-1);
-	writeText("Player 1", -0.9,0.8);
+	writeText(" ", -1,-1,HUD_TEXT);
+	writeText("Player 1", -0.9,0.8, HUD_TEXT);
 	sprintf(string,"Health: %i", player.healthpoints);
-	writeText(string, -0.9,0.9);
+	writeText(string, -0.9,0.9 , HUD_TEXT);
 	sprintf(string,"Level: %i", player.level);
-	writeText(string, -0.65,0.9);
+	writeText(string, -0.65,0.9,HUD_TEXT);
 	sprintf(string,"Experience: %d", player.experience);
-	writeText(string, -0.65,0.8);
+	writeText(string, -0.65,0.8 , HUD_TEXT);
+	}
+
+	if(gameMode == 2)
+	{
+		char string[300];
+		sprintf(string,"GAME PAUSED:", player.healthpoints);
+		writeText(string, -0.2,-0.03,POP_UP);
+
+	}
+
 
 	// Final flush
 	glutSwapBuffers();
@@ -111,12 +144,12 @@ void initialize ()
     glEnable(GL_LIGHT0);
 
     // FOG
-	//float FogCol[3]={0.8f,0.8f,0.8f};
-	//glEnable (GL_FOG);
-	//glFogi(GL_FOG_MODE, GL_LINEAR); // Note the 'i' after glFog - the GL_LINEAR constant is an integer.
- 	//glFogf(GL_FOG_START, 10.f);
- 	//glFogf(GL_FOG_END, 40.f);
-	//glFogf(GL_FOG_DENSITY, 2.f);
+	float FogCol[3]={0.8f,0.8f,0.8f};
+	glEnable (GL_FOG);
+	glFogi(GL_FOG_MODE, GL_LINEAR); // Note the 'i' after glFog - the GL_LINEAR constant is an integer.
+ 	glFogf(GL_FOG_START, 150.f);
+ 	glFogf(GL_FOG_END, 190.f);
+	glFogf(GL_FOG_DENSITY, 0.05f);
 
     glEnable(GL_DEPTH_TEST);
     glEnable( GL_COLOR_MATERIAL );
@@ -172,6 +205,16 @@ void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
      	break;
      case 'd':
      	player.walkbuffer[RIGHT] = true;
+     	break;
+     case 13:
+        if(gameMode == 1)
+     		gameMode = 2;
+     	
+     	else if(gameMode == 2)
+     	     gameMode =1;
+     	
+     	else if(gameMode == 0)
+	     	gameMode = 1;
      	break;
      
     }
@@ -245,7 +288,7 @@ void simulate(int lol){
 	player.updatePosition();
 	//updateEnemies(5, enemyList, player.x, player.y);
 	glutPostRedisplay();
-	glutTimerFunc(1,simulate,1);
+	glutTimerFunc(10,simulate,10);
 }
 
 /***************************************************************/
