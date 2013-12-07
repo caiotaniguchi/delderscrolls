@@ -48,12 +48,12 @@ void writeText(char * string, float x, float y, int FONT)
 		if(FONT == HUD_TEXT)
 		{	
 				glColor4f(1.0f, 1.0f, 1.0f, 0.0f);
-				glBegin(GL_QUADS);
-					glVertex2f(-0.2,-0.02);
-					glVertex2f(-0.1,0.02);
-					glVertex2f(0.2,0.02);
-					glVertex2f(0.11,-0.02);
-				glEnd();
+				// glBegin(GL_QUADS);
+				// 	glVertex2f(-0.2,-0.02);
+				// 	glVertex2f(-0.1,0.02);
+				// 	glVertex2f(0.2,0.02);
+				// 	glVertex2f(0.11,-0.02);
+				// glEnd();
 
 				glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
 				do glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p );

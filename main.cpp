@@ -25,6 +25,7 @@
 #include "dinamicObjManager.h"	   // Enemies Manager Functions
 #include "terrain.h"
 #include "util.h"
+#include "loadObj.h"
 
 // Global Variable Inizialization 
 glutWindow win;
@@ -33,10 +34,15 @@ float Rotation;
 float dtEndTime;
 float dtActualTime;
 int gameMode = 0;
+int MODEL_TYPE = TEAPOT_MODEL;
 
 // Random tree positions array
-float xpos[TREEAMOUNT];
-float zpos[TREEAMOUNT];
+float xpostree[TREEAMOUNT];
+float zpostree[TREEAMOUNT];
+
+// Random rock positions array
+float xposrock[ROCKAMOUNT];
+float zposrock[ROCKAMOUNT];
 
 // Create Player object
 Player player(0,0,100,10,1);
@@ -50,6 +56,17 @@ std::vector<DinamicObj> ballList;
 // Callback function for the main display
 void display() 
 {	
+	if(player.healthpoints <1)
+		gameMode = 3;
+
+	if(gameMode == 3)
+	{
+		char string[300];
+		sprintf(string,"GAME OVER", player.healthpoints);
+		writeText(string, -0.2,-0.03,POP_UP);
+	}
+
+
 	// Title Screen
 	if(gameMode == 0)
 	{
@@ -78,7 +95,7 @@ void display()
 
 	//Clear Buffers
 
-	
+	player.updatePosition();
 	// Modify the position where the player is 
 	// and the position where he is lookin at
 	player.LookAt();
@@ -116,8 +133,9 @@ void display()
 		char string[300];
 		sprintf(string,"GAME PAUSED:", player.healthpoints);
 		writeText(string, -0.2,-0.03,POP_UP);
-
 	}
+
+	// Game OVER MODE
 
 
 	// Final flush
@@ -144,12 +162,12 @@ void initialize ()
     glEnable(GL_LIGHT0);
 
     // FOG
-	float FogCol[3]={0.8f,0.8f,0.8f};
-	glEnable (GL_FOG);
+	float FogCol[3]={0.9f,0.9f,0.9f};
+	//glEnable (GL_FOG);
 	glFogi(GL_FOG_MODE, GL_LINEAR); // Note the 'i' after glFog - the GL_LINEAR constant is an integer.
- 	glFogf(GL_FOG_START, 150.f);
- 	glFogf(GL_FOG_END, 190.f);
-	glFogf(GL_FOG_DENSITY, 0.05f);
+	glFogf(GL_FOG_START, MAX_RENDER_DISTANCE -10);
+ 	glFogf(GL_FOG_END, MAX_RENDER_DISTANCE);
+	glFogf(GL_FOG_DENSITY, 0.5f);
 
     glEnable(GL_DEPTH_TEST);
     glEnable( GL_COLOR_MATERIAL );
@@ -215,8 +233,23 @@ void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
      	
      	else if(gameMode == 0)
 	     	gameMode = 1;
+	    else if (gameMode == 3)
+	    	{
+		    	gameMode = 1;
+		    	player.healthpoints = 100;
+		    	player.x = 0;
+		    	player.z = 0;
+		    	for (int i = 0; i < enemyList.size(); i++)
+		    		enemyList.erase(enemyList.begin()+i);
+		    	}
      	break;
-     
+     case '1':
+     	import_model ("cube.obj");
+     	MODEL_TYPE = LOADED_MODEL;
+     	break;
+     case '2':
+     	MODEL_TYPE = TEAPOT_MODEL;
+     	break;
     }
 
   if(key == 32) player.jumpBuffer = true;
@@ -285,10 +318,10 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
 // Request Redisplay without event
 void simulate(int lol){
 	checkEnemyStatus(enemyList, player);
-	player.updatePosition();
+	//
 	//updateEnemies(5, enemyList, player.x, player.y);
 	glutPostRedisplay();
-	glutTimerFunc(10,simulate,10);
+	glutTimerFunc(30,simulate,30);
 }
 
 /***************************************************************/
@@ -314,6 +347,7 @@ void reshape(int w, int h)
 // Main Loop
 int main(int argc, char **argv) 
 {
+
 	// Set Windows Values
 	win.width = WIN_WIDTH;
 	win.height = WIN_HEIGHT;
@@ -330,8 +364,14 @@ int main(int argc, char **argv)
 	// Generate random tree positions
 	for(int i=0; i <TREEAMOUNT+1; i++)
 	{
-		xpos[i] = rand() % (2*GROUND_AREA) -GROUND_AREA;
-		zpos[i] = rand() % (2*GROUND_AREA) -GROUND_AREA;
+		xpostree[i] = rand() % (2*GROUND_AREA) -GROUND_AREA;
+		zpostree[i] = rand() % (2*GROUND_AREA) -GROUND_AREA;
+	}
+// Generate random rock positions
+	for(int i=0; i <ROCKAMOUNT+1; i++)
+	{
+		xposrock[i] = rand() % (2*GROUND_AREA) -GROUND_AREA;
+		zposrock[i] = rand() % (2*GROUND_AREA) -GROUND_AREA;
 	}
 
 	// Start OpenGL Machine

@@ -28,6 +28,7 @@ T fromStr(std::string s){
 }
 
 vector <vector<vertex> > objModel;
+vector <vector<vertex> > rockModel;
  
 // Reads a .obj file. Saves all the vertex and face in objModel
 int import_model (string fileName) {

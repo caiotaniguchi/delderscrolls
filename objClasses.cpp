@@ -22,49 +22,50 @@ Object::Object(float Posx, float Posz)
 	z = Posz;
 }
 
-Object::Object(float Posx, float Posz, float radius)
+Object::Object(float Posx, float Posz, float radius, float height)
 {
 	x = Posx;
 	z = Posz;
 	colisionRadius = radius;
+	colisionHeight = height;
 }
-
-extern vector <vector<vertex> > objModel;
-int erro = import_model ("cube.obj");
 
 void Object::draw()
 {
 	using namespace std;
-	
+	extern vector <vector<vertex> > objModel;
 
 	glPushMatrix();
 		glColor3f(1.0,1.0,1.0);
 		glTranslatef(x,y,z);
 		glRotatef(directionAngle,0,1,0);
 
-	for (unsigned i = 0; i < objModel.size(); i++) 
-	{
-		
-		glBegin(GL_QUADS);
-		for (unsigned j = 0; j < objModel[i].size(); j++)
-			glVertex3f(objModel[i][j].x,objModel[i][j].y,objModel[i][j].z);
-		glEnd();
-		
-	}
 
+		
+			glBegin(GL_QUADS);
+	for (unsigned i = 0; i < objModel.size(); i++) 
+		{
+
+			for (unsigned j = 0; j < objModel[i].size(); j++){
+				glVertex3f(objModel[i][j].x,objModel[i][j].y,objModel[i][j].z);
+			}
+			
+		}
+			glEnd();	
+		
 	glPopMatrix();
 }
 
 
-// void Object::draw()
-// {
-// 	glPushMatrix();
-// 		glColor3f(1.0,1.0,1.0);
-// 			glTranslatef(x,y,z);
-// 		    glRotatef(directionAngle,0,1,0);
-// 		    glutSolidTeapot(1);
-// 	glPopMatrix();
-// }
+void Object::draw3()
+{
+	glPushMatrix();
+		glColor3f(1.0,1.0,1.0);
+			glTranslatef(x,y,z);
+		    glRotatef(directionAngle,0,1,0);
+		    glutSolidTeapot(1);
+	glPopMatrix();
+}
 
 
 
@@ -133,7 +134,7 @@ bool DinamicObj::detectColision()
 
 		float module = sqrt(radiusx*radiusx + radiusz*radiusz);
 
-		if (module <= objectsList[i].colisionRadius)
+		if (module <= objectsList[i].colisionRadius && y < objectsList[i].colisionHeight)
 		{
 			x += radiusx/module;
 			z += radiusz/module;
@@ -297,6 +298,8 @@ Enemy::Enemy(float Posx, float Posz, float radius,int hp, int ap, float sp, floa
 // Enemy main function. Controls decitions based on players position
 void Enemy::run(Player &player)
 {
+	extern int MODEL_TYPE;
+
 	float directionx = player.x - x;
 	float directionz = player.z - z;
 	float module = sqrt(directionx*directionx + directionz*directionz);
@@ -317,8 +320,11 @@ void Enemy::run(Player &player)
 		move(player.x,player.z);	// Follow Player
 	}
 
-	draw();						// Draw Enemy
-}
+	if(MODEL_TYPE == LOADED_MODEL)
+		draw();						// Draw Enemy
+	if(MODEL_TYPE == TEAPOT_MODEL)
+		draw3();
+}	
 
 // Wandering method. Set a random position to move if not yet setted.
 void Enemy::wander()
@@ -329,8 +335,8 @@ void Enemy::wander()
 
 	if(wanderflag == false)
 	{
-		wanderX = x + (rand()%40) -20;
-		wanderZ = z + (rand()%40) -20;
+		wanderX = (rand()%(2*GROUND_AREA-10))- GROUND_AREA;
+		wanderZ = (rand()%(2*GROUND_AREA-10)) -GROUND_AREA;
 		wanderflag = true;
 	}
 	else

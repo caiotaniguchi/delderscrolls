@@ -7,6 +7,7 @@
 #include <string.h>
 #include "constants.h"
 #include <stdlib.h>
+#include "loadObj.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ using namespace std;
 // loop across an enemy vector and update they positions
 void updateEnemies(float dt, vector<Enemy>& enemyList, Player &player)
 {
+	
 	for(int i =0; i < enemyList.size(); i++)
 	{
 		enemyList[i].physics(dt);		// Updates Physics events

@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "objClasses.h"
 #include <vector>
+#include "loadObj.h"
 
 using namespace std;
 
@@ -14,27 +15,60 @@ using namespace std;
 /***************************************************************/
 void loadTerrain(vector<Object>& objectsList)
 {
-	extern float xpos[TREEAMOUNT];
-	extern float zpos[TREEAMOUNT];
+	extern float xpostree[TREEAMOUNT];
+	extern float zpostree[TREEAMOUNT];
+
+	extern float xposrock[ROCKAMOUNT];
+	extern float zposrock[ROCKAMOUNT];
 
 	// randomgen trees
 	for(int i=0; i <TREEAMOUNT+1; i++)
 	{
 		glPushMatrix();
-		glTranslatef(xpos[i],0,zpos[i]);
+		glTranslatef(xpostree[i],0,zpostree[i]);
 		glColor3f(0.545, 0.271, 0.075);
 		glRotatef(-90,1,0,0);
 		gluCylinder(gluNewQuadric(),0.5,0.5,5,5,5);
 		glPopMatrix();
 		glPushMatrix();
 		glColor3f(0.0,1,0.0);
-		glTranslatef(xpos[i],4,zpos[i]);
+		glTranslatef(xpostree[i],4,zpostree[i]);
 		glRotatef(-90,1,0,0);
 		glutSolidCone(2, 10, 10, 10);
 		glPopMatrix();
 
-		objectsList.push_back(Object(xpos[i],zpos[i],2));
+		objectsList.push_back(Object(xpostree[i],zpostree[i],1.0,4));
 	}		
+
+	
+	for(int i=0; i<ROCKAMOUNT; i++)
+	{
+/*
+	extern vector <vector<vertex> > rockModel;
+	glPushMatrix();
+		glColor3f(1.0,1.0,1.0);
+		glTranslatef(xposrock[i],zposrock[i],0);
+		
+			glBegin(GL_QUADS);
+	for (unsigned i = 0; i < rockModel.size(); i++) 
+		{
+			for (unsigned j = 0; j < rockModel[i].size(); j++){
+				glVertex3f(rockModel[i][j].x,rockModel[i][j].y,rockModel[i][j].z);
+			}
+		}
+			glEnd();	
+	glPopMatrix();	
+		objectsList.push_back(Object(xposrock[i],zposrock[i],1,1));
+*/
+		glPushMatrix();
+		glColor3f(0.3,0.3,0.3);
+		glTranslatef(xposrock[i],0,zposrock[i]);
+		glutSolidSphere(2,10,10);
+		objectsList.push_back(Object(xposrock[i],zposrock[i],2,2));
+		glPopMatrix();
+	}
+
+
 
 	// Draw ground
 	glPushMatrix();

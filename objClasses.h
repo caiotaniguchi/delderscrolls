@@ -17,11 +17,12 @@ class Object
 
 		// Constructors
 		Object(float Posx,float Posz);	// Constructor function: set Object X,Z with PosX and PosZ
-		Object(float Posx, float Posz, float radius);
+		Object(float Posx, float Posz, float radius, float height);
 		
 		// Methods
 		void draw(); 					// Drawing function on the x,y,z position and with directionAngle rotation
 		void draw2();
+		void draw3();
 		void loadModel();				// LoadModel function (not implemented yet)
 };
 
