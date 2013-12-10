@@ -16,9 +16,9 @@
 #include <GL/glu.h>		  	   // Open Graphics Library (OpenGL) header
 #include <GL/glut.h>	  	   // The GL Utility Toolkit (GLUT) Header
 
-#include <iostream>		  	    
+#include <iostream>
 #include <stdio.h>
-#include <vector>	
+#include <vector>
 
 #include "objClasses.h"		   // Classes File
 #include "constants.h"		   // Constant File
@@ -27,7 +27,7 @@
 #include "util.h"
 #include "loadObj.h"
 
-// Global Variable Inizialization 
+// Global Variable Inizialization
 glutWindow win;
 mousePos mouse;
 float Rotation;
@@ -35,6 +35,8 @@ float dtEndTime;
 float dtActualTime;
 int gameMode = 0;
 int MODEL_TYPE = TEAPOT_MODEL;
+vector<string> partsFiles;
+
 
 // Random tree positions array
 float xpostree[TREEAMOUNT];
@@ -54,8 +56,8 @@ std::vector<DinamicObj> ballList;
 
 
 // Callback function for the main display
-void display() 
-{	
+void display()
+{
 	if(player.healthpoints <1)
 		gameMode = 3;
 
@@ -96,23 +98,23 @@ void display()
 	//Clear Buffers
 
 	player.updatePosition();
-	// Modify the position where the player is 
+	// Modify the position where the player is
 	// and the position where he is lookin at
 	player.LookAt();
-	
+
 	// Draw Enemies
 	player.physics(dtActualTime - dtEndTime);
 	updateEnemies(dtActualTime - dtEndTime, enemyList, player);
 	updateBalls(dtActualTime - dtEndTime);
 	// Draw ennemies
-	
+
 	// Load and place objects in the terrain
 	loadTerrain(objectsList);
 
 
-	// Drawer end 
+	// Drawer end
 	glPopMatrix();
-	
+
 	// Keep the time when the end of the frame was finished
 	dtEndTime = glutGet(GLUT_ELAPSED_TIME);
 
@@ -142,8 +144,8 @@ void display()
 	glutSwapBuffers();
 	}
 
-// Initialization Function that set some parameters 
-void initialize () 
+// Initialization Function that set some parameters
+void initialize ()
 {
 	glutSetCursor(GLUT_CURSOR_NONE);
 
@@ -157,7 +159,7 @@ void initialize ()
     glLightfv( GL_LIGHT0, GL_SPECULAR, specular );
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-    // Turns lights ON 
+    // Turns lights ON
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
@@ -168,7 +170,7 @@ void initialize ()
 	glFogf(GL_FOG_START, MAX_RENDER_DISTANCE -10);
  	glFogf(GL_FOG_END, MAX_RENDER_DISTANCE);
 	glFogf(GL_FOG_DENSITY, 0.5f);
-	//glEnable(GL_CULL_FACE); 
+	//glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glEnable( GL_COLOR_MATERIAL );
 	glClearColor(0.0, 0.0, 0.6, 1.0);
@@ -189,10 +191,10 @@ void mouseMotion(int x, int y)
 
 	player.yaw(x -mouse.x);
 	player.pitch(y-mouse.y);
-	
+
 	mouse.x = x;
 	mouse.y = y;
-	
+
 	// Reset mouse position if pointer moves more than snapThreshold from the center
 	if(abs(x - mouse.w/2) > snapThreshold || abs(y-mouse.h/2) > snapThreshold)
 	{
@@ -206,12 +208,12 @@ void mouseMotion(int x, int y)
 }
 
 // Callback funtion for down key keyboard events
-void keyboard (unsigned char key, int mousePositionX, int mousePositionY )		
-{ 
-  switch ( key ) 
+void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
+{
+  switch ( key )
   {
-    case KEY_ESCAPE:        
-      exit ( 0 ); 
+    case KEY_ESCAPE:
+      exit ( 0 );
      case 'w':
         player.walkbuffer[FRONT] = true;
         break;
@@ -227,10 +229,10 @@ void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
      case 13:
         if(gameMode == 1)
      		gameMode = 2;
-     	
+
      	else if(gameMode == 2)
      	     gameMode =1;
-     	
+
      	else if(gameMode == 0)
 	     	gameMode = 1;
 	    else if (gameMode == 3)
@@ -243,12 +245,12 @@ void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
 		    		enemyList.erase(enemyList.begin()+i);
 		    	}
      	break;
-     case '1':
-     	import_model ("cube.obj");
-     	MODEL_TYPE = LOADED_MODEL;
-     	break;  
-     	case '3':
-     	import_model ("lego.obj");
+    //case '1':
+    // 	import_model ("cube.obj");
+    // 	MODEL_TYPE = LOADED_MODEL;
+    // 	break;
+    case '3':
+     	import_model (partsFiles);
      	MODEL_TYPE = LOADED_MODEL;
      	break;
      case '2':
@@ -269,10 +271,10 @@ void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
 }
 
 // Callback function for UP key Keyboard events
-void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )		
-{ 
-  switch ( key ) 
-  {  
+void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
+{
+  switch ( key )
+  {
      case 'w':
      	player.walkbuffer[FRONT] = false;
      	break;
@@ -285,7 +287,7 @@ void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
      case 'd':
      	player.walkbuffer[RIGHT] = false;
      	break;
-     
+
   }
 
   if(key == 32) player.jumpBuffer = false;
@@ -303,17 +305,17 @@ void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
 // Callback treating mouseclick event
 void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
 {
-	switch( key ) 
-  	{  
+	switch( key )
+  	{
     case 0:
     	checkhit(enemyList, player);
 	   	break;
-  	
+
   	case 2:
   		throwball(player);
     	break;
   	}
-  	
+
   	// Request Redisplay
   	//glutPostRedisplay();
 }
@@ -331,7 +333,7 @@ void simulate(int lol){
 /***************************************************************/
 /* 						Reshape Callback 					   */
 /***************************************************************/
-// Callback for reshaping the window's viewport 
+// Callback for reshaping the window's viewport
 void reshape(int w, int h)
 {
 	mouse.w = w;
@@ -349,8 +351,19 @@ void reshape(int w, int h)
 /* 							 MAIN  						       */
 /***************************************************************/
 // Main Loop
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
+    partsFiles.push_back("cabeca.obj");
+    partsFiles.push_back("tronco.obj");
+    partsFiles.push_back("cintura.obj");
+    partsFiles.push_back("braco_esq.obj");
+    partsFiles.push_back("mao_esq.obj");
+    partsFiles.push_back("espada.obj");
+    partsFiles.push_back("perna_esq.obj");
+    partsFiles.push_back("braco_dir.obj");
+    partsFiles.push_back("mao_dir.obj");
+    partsFiles.push_back("perna_dir.obj");
+
 
 	// Set Windows Values
 	win.width = WIN_WIDTH;
@@ -383,7 +396,7 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );  		// Display Mode
 	glutInitWindowSize(win.width,win.height);							// set window size
 	glutCreateWindow("delderscrolls: the revenge of the teapots");		// create Window
-	initialize();												
+	initialize();
 	glutPassiveMotionFunc(mouseMotion);
 	glutWarpPointer(mouse.w/2, mouse.h/2);								// Use the pointer position to controle the camera
 	glutMouseFunc(mouseClick);											// Mouse click event callback

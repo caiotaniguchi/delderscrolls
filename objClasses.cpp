@@ -1,10 +1,10 @@
-#include <cmath> 
+#include <cmath>
 #include <stdlib.h>		   // Std Library
 #include <GL/gl.h>		   // Open Graphics Library (OpenGL) header
 #include <GL/glut.h>	   // The GL Utility Toolkit (GLUT) Header
 #include "constants.h"	   // Constant File
-#include "objClasses.h"	   // Object classes File	
-#include <vector> 
+#include "objClasses.h"	   // Object classes File
+#include <vector>
 #include <iostream>
 #include "loadObj.h"
 #include <string>
@@ -33,26 +33,35 @@ Object::Object(float Posx, float Posz, float radius, float height)
 void Object::draw()
 {
 	using namespace std;
-	extern vector <vector<vertex> > objModel;
+	extern vector<vector<vector<vertex> > > objModel;
 
 	glPushMatrix();
-		glColor3f(1.0,1.0,1.0);
+
+		glColor3f(1.0,0.0,0.0);
 		glTranslatef(x,y,z);
-		glRotatef(directionAngle,0,1,0);
+		//glRotatef(directionAngle,0,1,0);
+		glRotatef(directionAngle+135,0,1,0);
 
 
-		
-			glBegin(GL_QUADS);
-	for (unsigned i = 0; i < objModel.size(); i++) 
-		{
+	glBegin(GL_TRIANGLES);
+    for (int i = 0; i < objModel.size(); i++){
+        switch (i%3) {
+            case 0:
+                glColor3f(1.0,0.0,0.0);
+                break;
+            case 1:
+                glColor3f(0.0,1.0,0.0);
+                break;
+            case 2:
+                glColor3f(0.0,0.0,1.0);
+                break;
+        }
+        for (int j = 0; j < objModel[i].size(); j++)
+            for (int k = 0; k < objModel[i][j].size(); k++)
+                glVertex3f(objModel[i][j][k].x, objModel[i][j][k].y, objModel[i][j][k].z);
+    }
+ 	glEnd();
 
-			for (unsigned j = 0; j < objModel[i].size(); j++){
-				glVertex3f(objModel[i][j].x,objModel[i][j].y,objModel[i][j].z);
-			}
-			
-		}
-			glEnd();	
-		
 	glPopMatrix();
 }
 
@@ -94,7 +103,7 @@ DinamicObj::DinamicObj(float Posx, float Posz, int hp, int ap, float sp) : Objec
 
 DinamicObj::DinamicObj(float Posx, float Posz, float Posy,float upBall, float xBall, float zBall, float currenttime) : Object(Posx,Posz)
 {
-	creationTime = currenttime;	
+	creationTime = currenttime;
 	y = Posy;
 	upSpeedMomentum = upBall;		// Upward speed (for jumping)
 	throwbackx = -xBall;
@@ -113,18 +122,18 @@ bool DinamicObj::detectColision()
 	float lastz = z;
 
 	// Check invisble wall
-	if(abs(x)>GROUND_AREA-2) 
+	if(abs(x)>GROUND_AREA-2)
 		{
 			x = lastx;
 			return true;
 		}
-		
+
 	if(abs(z)>GROUND_AREA-2)
 		{
 			z = lastz;
 			return true;
 		}
-		 
+
 
 	// evaluates for fixed objects
 	for(int i =0 ; i < objectsList.size(); i++)
@@ -162,7 +171,7 @@ bool DinamicObj::detectMovingColision(bool doesHit)
 		radiusz = z - enemyList[i].z;
 
 		float module = sqrt(radiusx*radiusx + radiusz*radiusz);
-		
+
 		// skip if enmylist is yourself
 		if(module == 0) continue;
 
@@ -176,13 +185,13 @@ bool DinamicObj::detectMovingColision(bool doesHit)
 			//std::cout << "yey\n";//return true;
 		}
 	}
-	
+
 	return false;
 }
 
 // Movement Method
 void DinamicObj::move(float dirx, float dirz)
-{	
+{
 	float angle;
 	float lastx = x;
 	float lastz = z;
@@ -192,8 +201,8 @@ void DinamicObj::move(float dirx, float dirz)
 
 	// compute the distance to the final position
 	float module = sqrt(directionx*directionx + directionz*directionz);
-	
-	// Evaluates Angle for Rotation	
+
+	// Evaluates Angle for Rotation
 	if(directionz > 0)
 		angle = int(-360*acos(directionx/module)/(2*M_PI))%360;
 	else
@@ -233,13 +242,13 @@ void DinamicObj::physics(float dt)
 {
 	float thowbackmodule = sqrt(throwbackx*throwbackx + throwbackz*throwbackz); // Calculate throwback module
 	dt = dt/1000;																// Convert milliseconds to seconds
-	
+
 	// Controls Gravity
 	y += upSpeedMomentum*dt + GRAVITY*dt*dt/2;
 	upSpeedMomentum += GRAVITY*dt;
 
 	// Groud Limit
-	if(y<GROUNDLIMIT) 
+	if(y<GROUNDLIMIT)
 	{
 		y=GROUNDLIMIT;
 		upSpeedMomentum = 0;
@@ -247,8 +256,8 @@ void DinamicObj::physics(float dt)
 
 	// Controls Throwback
 	if(y > GROUNDLIMIT)
-	{	
-		// Only add vector if throwback is different than zero 
+	{
+		// Only add vector if throwback is different than zero
 		if(throwbackx != 0 || throwbackz != 0)
 		{
 			if(!detectColision())
@@ -315,7 +324,7 @@ void Enemy::run(Player &player)
 		wander();
 	//1==1;
 	else
-	{	
+	{
 		wanderflag = false;		// Turn off wandering
 		move(player.x,player.z);	// Follow Player
 	}
@@ -324,7 +333,7 @@ void Enemy::run(Player &player)
 		draw();						// Draw Enemy
 	if(MODEL_TYPE == TEAPOT_MODEL)
 		draw3();
-}	
+}
 
 // Wandering method. Set a random position to move if not yet setted.
 void Enemy::wander()
@@ -420,7 +429,7 @@ void Player::updatePosition()
 
 	// Chcek if there is a colision
 	if(detectColision()  || detectMovingColision(NOHIT))
-	{	
+	{
 		x = lastx;
 		z = lastz;
 	}

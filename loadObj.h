@@ -14,4 +14,4 @@ struct vertex {
 	float z;
 };
 
-int import_model (string fileName);
+int import_model (vector<string> files);
