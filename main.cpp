@@ -168,7 +168,7 @@ void initialize ()
 	glFogf(GL_FOG_START, MAX_RENDER_DISTANCE -10);
  	glFogf(GL_FOG_END, MAX_RENDER_DISTANCE);
 	glFogf(GL_FOG_DENSITY, 0.5f);
-
+	//glEnable(GL_CULL_FACE); 
     glEnable(GL_DEPTH_TEST);
     glEnable( GL_COLOR_MATERIAL );
 	glClearColor(0.0, 0.0, 0.6, 1.0);
@@ -202,7 +202,7 @@ void mouseMotion(int x, int y)
 		glutWarpPointer(mouse.w/2, mouse.h/2);
 	}
 	// Request redisplay
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 // Callback funtion for down key keyboard events
@@ -246,6 +246,10 @@ void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
      case '1':
      	import_model ("cube.obj");
      	MODEL_TYPE = LOADED_MODEL;
+     	break;  
+     	case '3':
+     	import_model ("lego.obj");
+     	MODEL_TYPE = LOADED_MODEL;
      	break;
      case '2':
      	MODEL_TYPE = TEAPOT_MODEL;
@@ -261,7 +265,7 @@ void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
    		break;
   }
   // Request Redisplay
-  glutPostRedisplay();
+  //glutPostRedisplay();
 }
 
 // Callback function for UP key Keyboard events
@@ -293,7 +297,7 @@ void keyboardup ( unsigned char key, int mousePositionX, int mousePositionY )
    		break;
   }
   // Request Redisplay
-  glutPostRedisplay();
+  //glutPostRedisplay();
 }
 
 // Callback treating mouseclick event
@@ -311,7 +315,7 @@ void mouseClick(int key, int state, int mousePositionX, int mousePositionY)
   	}
   	
   	// Request Redisplay
-  	glutPostRedisplay();
+  	//glutPostRedisplay();
 }
 
 // Timer Callback function
@@ -321,7 +325,7 @@ void simulate(int lol){
 	//
 	//updateEnemies(5, enemyList, player.x, player.y);
 	glutPostRedisplay();
-	glutTimerFunc(30,simulate,30);
+	glutTimerFunc(33.3,simulate,33.3);
 }
 
 /***************************************************************/

@@ -37,7 +37,7 @@ void loadTerrain(vector<Object>& objectsList)
 		glutSolidCone(2, 10, 10, 10);
 		glPopMatrix();
 
-		objectsList.push_back(Object(xpostree[i],zpostree[i],1.0,4));
+		objectsList.push_back(Object(xpostree[i],zpostree[i],2,6));
 	}		
 
 	

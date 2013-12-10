@@ -19,16 +19,16 @@
 #define WIN_HEIGHT 600
 
 // Render Constants
-#define MAX_RENDER_DISTANCE 100.0f
+#define MAX_RENDER_DISTANCE 60.0f
 #define MIN_RENDER_DISTANCE 0.1f
 #define FIELDOFVIEWANGLE 45		// graus
 
 // // Game Constants \\ \\
 // Physics
-#define GRAVITY -5000
+#define GRAVITY -6000
 #define AIRFRICTION 2
 #define GROUNDLIMIT 0.9
-#define	ELASTIC_COEFFICIENT 0.9
+#define	ELASTIC_COEFFICIENT 0.8
 #define BALLTIMEOUT 3000       		// millisecs
 #define LEVEL_UP_EXPERIENCE 1000
 #define BALLHITPOINTS		10
@@ -37,7 +37,7 @@
 #define TREEAMOUNT 30
 #define ROCKAMOUNT 5
 #define TEAPOTS_AMOUNT 10
-#define GROUND_AREA 30
+#define GROUND_AREA 60
 #define ATTACK_DISTANCE 5
 #define	COOLDOWNTIME_MS 1500
 #define ATTACK_ANGLE 20
