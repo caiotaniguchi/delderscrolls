@@ -35,8 +35,8 @@
 
 // Gameplay
 #define TREEAMOUNT 10
-#define ROCKAMOUNT 5
-#define TEAPOTS_AMOUNT 10
+#define ROCKAMOUNT 10
+#define TEAPOTS_AMOUNT 2
 #define GROUND_AREA 50
 #define ATTACK_DISTANCE 5
 #define	COOLDOWNTIME_MS 1500

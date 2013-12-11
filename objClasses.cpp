@@ -39,16 +39,8 @@ void Object::draw()
 	using namespace std;
 	extern vector<vector<vector<vertex> > > objModel;
 
-    if (legCounter <70)
-    	legCounter++;
 
-    if(legCounter < 30) legCounter2++;
-
-    if(legCounter > 30) legCounter2--;
-
-    if(legCounter >= 90) legCounter =0;
-
-
+		 
 
 	glPushMatrix();
 		
@@ -76,19 +68,21 @@ void Object::draw()
 		glPushMatrix();    
         if(i == 6)
         {
-			glColor3f(1.0,1.0,1.0);//
+			//glColor3f(1.0,1.0,1.0);//
 			glTranslatef(0,1,0);
-			glRotatef(legCounter2,0,0,1);
+			glRotatef(legCounter2,1,0,1);
 			glTranslatef(0,-1,0);
 		}
 
 		if(i == 9)
 		{
-			glColor3f(1.0,1.0,1.0);//
+			//glColor3f(1.0,1.0,1.0);//
 			glTranslatef(0,1,0);
-			glRotatef(-legCounter2,0,0,1);
+			glRotatef(-legCounter2,1,0,1);
 			glTranslatef(0,-1,0);
 		}
+
+
   
     glBegin(GL_TRIANGLES);
 
@@ -366,6 +360,8 @@ void Enemy::run(Player &player)
 	{
 		wanderflag = false;		// Turn off wandering
 		move(player.x,player.z);	// Follow Player
+		    legCounter2 = 20*sin(legCounter/4);
+    		legCounter++;
 	}
 
 	if(MODEL_TYPE == LOADED_MODEL)
