@@ -19,8 +19,8 @@
 #define WIN_HEIGHT 600
 
 // Render Constants
-#define MAX_RENDER_DISTANCE 60.0f
-#define MIN_RENDER_DISTANCE 0.1f
+#define MAX_RENDER_DISTANCE 10.0f
+#define MIN_RENDER_DISTANCE 1.0f
 #define FIELDOFVIEWANGLE 45		// graus
 
 // // Game Constants \\ \\
@@ -34,10 +34,10 @@
 #define BALLHITPOINTS		10
 
 // Gameplay
-#define TREEAMOUNT 30
+#define TREEAMOUNT 10
 #define ROCKAMOUNT 5
 #define TEAPOTS_AMOUNT 10
-#define GROUND_AREA 60
+#define GROUND_AREA 50
 #define ATTACK_DISTANCE 5
 #define	COOLDOWNTIME_MS 1500
 #define ATTACK_ANGLE 20

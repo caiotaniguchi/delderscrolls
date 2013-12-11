@@ -58,6 +58,8 @@ std::vector<DinamicObj> ballList;
 // Callback function for the main display
 void display()
 {
+	
+
 	if(player.healthpoints <1)
 		gameMode = 3;
 
@@ -87,13 +89,14 @@ void display()
 	// Game Mode
 	if(gameMode == 1)
 	{
+	dtActualTime = glutGet(GLUT_ELAPSED_TIME);
 	glClearColor(0.0, 0.0, 0.6, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 
 	char string[300];
 	// Keep the actual time that this frame is been rendeered
-	dtActualTime = glutGet(GLUT_ELAPSED_TIME);
+	
 
 	//Clear Buffers
 
@@ -101,6 +104,9 @@ void display()
 	// Modify the position where the player is
 	// and the position where he is lookin at
 	player.LookAt();
+
+	GLfloat light_position[] = { -GROUND_AREA, 10.0, -GROUND_AREA, 1.0 };
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
 	// Draw Enemies
 	player.physics(dtActualTime - dtEndTime);
@@ -116,7 +122,7 @@ void display()
 	glPopMatrix();
 
 	// Keep the time when the end of the frame was finished
-	dtEndTime = glutGet(GLUT_ELAPSED_TIME);
+	
 
 	// Write text
 	//writeText("", 0,0);
@@ -128,6 +134,8 @@ void display()
 	writeText(string, -0.65,0.9,HUD_TEXT);
 	sprintf(string,"Experience: %d", player.experience);
 	writeText(string, -0.65,0.8 , HUD_TEXT);
+
+	dtEndTime = glutGet(GLUT_ELAPSED_TIME);
 	}
 
 	if(gameMode == 2)
@@ -142,6 +150,7 @@ void display()
 
 	// Final flush
 	glutSwapBuffers();
+	
 	}
 
 // Initialization Function that set some parameters
@@ -150,13 +159,13 @@ void initialize ()
 	glutSetCursor(GLUT_CURSOR_NONE);
 
     // Light Configuration
-    GLfloat amb_light[] = { 0.1, 0.1, 0.1, 1.0 };
-    GLfloat diffuse[] = { 0.6, 0.6, 0.6, 1 };
-    GLfloat specular[] = { 0.7, 0.7, 0.3, 1 };
-    GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat amb_light[] = { 0.3, 0.3, 0.3, 1.0 };
+    GLfloat diffuse[] = { 0.2, 0.2, 0.2, 1.0 };
+    GLfloat specular[] = { 0.08, 0.08, 0.08, 1.0 };
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, amb_light );
     glLightfv( GL_LIGHT0, GL_DIFFUSE, diffuse );
     glLightfv( GL_LIGHT0, GL_SPECULAR, specular );
+    GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0 };
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     // Turns lights ON
@@ -171,13 +180,14 @@ void initialize ()
  	glFogf(GL_FOG_END, MAX_RENDER_DISTANCE);
 	glFogf(GL_FOG_DENSITY, 0.5f);
 	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glEnable( GL_COLOR_MATERIAL );
 	glClearColor(0.0, 0.0, 0.6, 1.0);
-    glEnable(GL_POLYGON_OFFSET_FILL);
-    glPolygonOffset(1.0,1.0);
-    glHint (GL_FOG_HINT, GL_NICEST);
-    glLineWidth(1);
+    //glEnable(GL_POLYGON_OFFSET_FILL);
+    //glPolygonOffset(1.0,1.0);
+    glHint (GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_FASTEST);
+    //glLineWidth(1);
 }
 
 /***************************************************************/
