@@ -14,6 +14,8 @@ class Object
 		float directionAngle;			// Object Rotation Angle
 		float colisionRadius;				// Radius value for colission evaluation
 		float colisionHeight;				// Height value for colission evaluation
+		float legCounter;
+		int legCounter2;
 
 		// Constructors
 		Object(float Posx,float Posz);	// Constructor function: set Object X,Z with PosX and PosZ

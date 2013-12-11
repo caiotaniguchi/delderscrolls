@@ -160,7 +160,7 @@ void initialize ()
 
     // Light Configuration
     GLfloat amb_light[] = { 0.3, 0.3, 0.3, 1.0 };
-    GLfloat diffuse[] = { 0.2, 0.2, 0.2, 1.0 };
+    GLfloat diffuse[] = { 0.3, 0.3, 0.3, 1.0 };
     GLfloat specular[] = { 0.08, 0.08, 0.08, 1.0 };
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, amb_light );
     glLightfv( GL_LIGHT0, GL_DIFFUSE, diffuse );
@@ -184,10 +184,10 @@ void initialize ()
     glEnable(GL_DEPTH_TEST);
     glEnable( GL_COLOR_MATERIAL );
 	glClearColor(0.0, 0.0, 0.6, 1.0);
-    //glEnable(GL_POLYGON_OFFSET_FILL);
-    //glPolygonOffset(1.0,1.0);
-    glHint (GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_FASTEST);
-    //glLineWidth(1);
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(1.0,1.0);
+    //glHint (GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_FASTEST);
+    glLineWidth(1);
 }
 
 /***************************************************************/

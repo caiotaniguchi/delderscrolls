@@ -20,6 +20,8 @@ Object::Object(float Posx, float Posz)
 {
 	x = Posx;
 	z = Posz;
+		legCounter = 0;
+	
 }
 
 Object::Object(float Posx, float Posz, float radius, float height)
@@ -28,6 +30,8 @@ Object::Object(float Posx, float Posz, float radius, float height)
 	z = Posz;
 	colisionRadius = radius;
 	colisionHeight = height;
+	legCounter = 0;
+
 }
 
 void Object::draw()
@@ -35,17 +39,29 @@ void Object::draw()
 	using namespace std;
 	extern vector<vector<vector<vertex> > > objModel;
 
-	glPushMatrix();
+    if (legCounter <70)
+    	legCounter++;
 
+    if(legCounter < 30) legCounter2++;
+
+    if(legCounter > 30) legCounter2--;
+
+    if(legCounter >= 90) legCounter =0;
+
+
+
+	glPushMatrix();
+		
 		glColor3f(1.0,0.0,0.0);
 		glTranslatef(x,y,z);
 		//glRotatef(directionAngle,0,1,0);
 		glRotatef(directionAngle+135,0,1,0);
 
 
-	glBegin(GL_TRIANGLES);
-    for (int i = 0; i < objModel.size(); i++){
-        switch (i%3) {
+	for (int i = 0; i < objModel.size(); i++){
+
+        switch (i%3)
+        {
             case 0:
                 glColor3f(1.0,0.0,0.0);
                 break;
@@ -55,12 +71,35 @@ void Object::draw()
             case 2:
                 glColor3f(0.0,0.0,1.0);
                 break;
-        }
+        }	
+
+		glPushMatrix();    
+        if(i == 6)
+        {
+			glColor3f(1.0,1.0,1.0);//
+			glTranslatef(0,1,0);
+			glRotatef(legCounter2,0,0,1);
+			glTranslatef(0,-1,0);
+		}
+
+		if(i == 9)
+		{
+			glColor3f(1.0,1.0,1.0);//
+			glTranslatef(0,1,0);
+			glRotatef(-legCounter2,0,0,1);
+			glTranslatef(0,-1,0);
+		}
+  
+    glBegin(GL_TRIANGLES);
+
         for (int j = 0; j < objModel[i].size(); j++)
             for (int k = 0; k < objModel[i][j].size(); k++)
                 glVertex3f(objModel[i][j][k].x, objModel[i][j][k].y, objModel[i][j][k].z);
+    glEnd();
+
+    glPopMatrix();
     }
- 	glEnd();
+ 	
 
 	glPopMatrix();
 }
