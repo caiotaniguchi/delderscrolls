@@ -1,0 +1,32 @@
+Dependências:
+
+g++
+g++-4.8
+libstdc++-4.8-dev
+freeglut3
+freeglut3-dev
+
+
+
+Controles:
+
+Movimento:
+w: anda para frente
+s: anda para trás
+a: anda para a esquerda
+d: anda para a direita
+espaço: pula
+shift: aumenta a velocidade (enquanto pressionado)
+
+Câmera:
+mouse: move a câmera
+
+Ataque:
+mouse, botão esquerdo: ataca inimigos próximos
+mouse, botão direito: lança ataque de longa distância
+
+Modelos:
+1: inimigos são bules
+2: inimigos são bonecos de Lego
+
+ESC: sai do jogo

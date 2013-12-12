@@ -21,7 +21,7 @@ Object::Object(float Posx, float Posz)
 	x = Posx;
 	z = Posz;
 		legCounter = 0;
-	
+
 }
 
 Object::Object(float Posx, float Posz, float radius, float height)
@@ -40,50 +40,58 @@ void Object::draw()
 	extern vector<vector<vector<vertex> > > objModel;
 
 
-		 
+
 
 	glPushMatrix();
-		
+
 		glColor3f(1.0,0.0,0.0);
 		glTranslatef(x,y,z);
 		//glRotatef(directionAngle,0,1,0);
-		glRotatef(directionAngle+135,0,1,0);
+		glRotatef(directionAngle+150,0,1,0);
 
 
 	for (int i = 0; i < objModel.size(); i++){
+        glPushMatrix();
 
-        switch (i%3)
-        {
+        switch (i) {
             case 0:
-                glColor3f(1.0,0.0,0.0);
+                glColor3f(1.0,1.0,0.0);
                 break;
             case 1:
-                glColor3f(0.0,1.0,0.0);
+                glColor3f(1.0,0.0,0.0);
                 break;
             case 2:
                 glColor3f(0.0,0.0,1.0);
                 break;
-        }	
+            case 3:
+                glColor3f(1.0,0.0,0.0);
+                break;
+            case 4:
+                glColor3f(1.0,1.0,0.0);
+                break;
+            case 5:
+                glColor3f(0.827,0.827,0.827);
+                break;
+            case 6:
+                glColor3f(0.0,0.0,1.0);
+                glTranslatef(0,1,0);
+                glRotatef(legCounter2,1,0,1);
+                glTranslatef(0,-1,0);
+                break;
+            case 7:
+                glColor3f(1.0,0.0,0.0);
+                break;
+            case 8:
+                glColor3f(1.0,1.0,0.0);
+                break;
+            case 9:
+                glColor3f(0.0,0.0,1.0);
+                glTranslatef(0,1,0);
+                glRotatef(-legCounter2,1,0,1);
+                glTranslatef(0,-1,0);
+                break;
+          }
 
-		glPushMatrix();    
-        if(i == 6)
-        {
-			//glColor3f(1.0,1.0,1.0);//
-			glTranslatef(0,1,0);
-			glRotatef(legCounter2,1,0,1);
-			glTranslatef(0,-1,0);
-		}
-
-		if(i == 9)
-		{
-			//glColor3f(1.0,1.0,1.0);//
-			glTranslatef(0,1,0);
-			glRotatef(-legCounter2,1,0,1);
-			glTranslatef(0,-1,0);
-		}
-
-
-  
     glBegin(GL_TRIANGLES);
 
         for (int j = 0; j < objModel[i].size(); j++)
@@ -93,7 +101,7 @@ void Object::draw()
 
     glPopMatrix();
     }
- 	
+
 
 	glPopMatrix();
 }
@@ -360,7 +368,7 @@ void Enemy::run(Player &player)
 	{
 		wanderflag = false;		// Turn off wandering
 		move(player.x,player.z);	// Follow Player
-		    legCounter2 = 20*sin(legCounter/4);
+		    legCounter2 = 30*sin(legCounter/8);
     		legCounter++;
 	}
 

@@ -58,7 +58,7 @@ std::vector<DinamicObj> ballList;
 // Callback function for the main display
 void display()
 {
-	
+
 
 	if(player.healthpoints <1)
 		gameMode = 3;
@@ -96,7 +96,7 @@ void display()
 
 	char string[300];
 	// Keep the actual time that this frame is been rendeered
-	
+
 
 	//Clear Buffers
 
@@ -122,7 +122,7 @@ void display()
 	glPopMatrix();
 
 	// Keep the time when the end of the frame was finished
-	
+
 
 	// Write text
 	//writeText("", 0,0);
@@ -150,7 +150,7 @@ void display()
 
 	// Final flush
 	glutSwapBuffers();
-	
+
 	}
 
 // Initialization Function that set some parameters
@@ -255,15 +255,11 @@ void keyboard (unsigned char key, int mousePositionX, int mousePositionY )
 		    		enemyList.erase(enemyList.begin()+i);
 		    	}
      	break;
-    //case '1':
-    // 	import_model ("cube.obj");
-    // 	MODEL_TYPE = LOADED_MODEL;
-    // 	break;
-    case '3':
+    case '2':
      	import_model (partsFiles);
      	MODEL_TYPE = LOADED_MODEL;
      	break;
-     case '2':
+     case '1':
      	MODEL_TYPE = TEAPOT_MODEL;
      	break;
     }

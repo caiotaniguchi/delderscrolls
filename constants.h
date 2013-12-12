@@ -34,14 +34,14 @@
 #define BALLHITPOINTS		10
 
 // Gameplay
-#define TREEAMOUNT 10
+#define TREEAMOUNT 20
 #define ROCKAMOUNT 10
-#define TEAPOTS_AMOUNT 2
-#define GROUND_AREA 50
+#define TEAPOTS_AMOUNT 4
+#define GROUND_AREA 40
 #define ATTACK_DISTANCE 5
 #define	COOLDOWNTIME_MS 1500
 #define ATTACK_ANGLE 20
-#define ENEMY_SPEED 0.2
+#define ENEMY_SPEED 0.1
 #define LEVEL_FACTOR 2     //amount of new monster per level
 #define SPRINT_SPEED 4
 #define THROWPOWER 1.5
